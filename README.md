@@ -10,4 +10,4 @@
 - [ ] Bonus: Style theme 50 points
 
 
-      Total score: 60 / 800 points
+Total score: 60 / 800 points
