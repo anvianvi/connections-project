@@ -5,9 +5,18 @@ import { Router } from '@angular/router';
   selector: 'app-not-found',
   template: `
     <div class="not-found-wrapper">
-      <span>Sorry, smth went wrong((</span>
+      <h3>404</h3>
+      <p>Oops! Looks like you got lost.</p>
+      <p>
+        The page you are looking for might be under construction, moved, or
+        doesn't exist.
+      </p>
+      <p>Let's get you back on track: <a href="/">go to the homepage</a></p>
+      <p>
+        You will be redirected to the home page automatically in
+        {{ counter }} seconds...
+      </p>
     </div>
-    <p>Redirecting to the home page in {{ counter }} seconds...</p>
   `,
   styles: [
     `
@@ -19,23 +28,38 @@ import { Router } from '@angular/router';
         align-items: center;
       }
       .not-found-wrapper {
+        max-width: 600px;
         display: flex;
+        text-align: center;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 27px;
 
-        span {
-          max-width: 185px;
-          color: #828282;
-          font-size: 24px;
-          font-weight: 700;
+        h3 {
+          font-size: 8em;
+          color: #d9534f;
+          margin-bottom: 1em;
+        }
+
+        p {
+          font-size: 2em;
+          color: #555;
+        }
+        a {
+          color: #337ab7;
+          text-decoration: none;
+          font-weight: bold;
+        }
+
+        a:hover {
+          text-decoration: underline;
         }
       }
     `,
   ],
 })
 export class NotFoundComponent implements OnInit, OnDestroy {
-  counter: number = 5;
+  counter: number = 9;
   timer: ReturnType<typeof setTimeout> | undefined;
 
   constructor(private router: Router) {}
