@@ -1,18 +1,13 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { LoginResponse } from 'src/app/shared/interfaces/interfaces';
-import { API_URL } from 'src/app/shared/variables/api';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  // public isLoggedIn: Observable<boolean> =
-  //   this.isAuthenticatedSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor() {
     this.checkAuthentication();
   }
 
