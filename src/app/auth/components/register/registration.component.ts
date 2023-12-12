@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { RegistrationService } from '../services/regestration.service';
+import { RegistrationService } from '../../services/regestration.service';
 import { HttpResponse } from '@angular/common/http';
 import { RegistrationResponse } from 'src/app/shared/interfaces/interfaces';
 import { MatSnackBar } from '@angular/material/snack-bar';
