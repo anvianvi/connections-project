@@ -1,0 +1,104 @@
+<form
+  [formGroup]="registrationForm"
+  (ngSubmit)="onSubmit()"
+  class="regestration-form"
+>
+  <h2>Registration</h2>
+  <!-- Email Field -->
+  <label for="email">Email:</label>
+  <input
+    type="text"
+    id="email"
+    formControlName="email"
+    [ngClass]="{
+      'error-border':
+        registrationForm.get('email')?.invalid &&
+        registrationForm.get('email')?.touched
+    }"
+  />
+  <div class="email-errors-contaner">
+    <div *ngIf="registrationForm.get('email')?.hasError('required')">
+      Please enter a email.
+    </div>
+    <div *ngIf="registrationForm.get('email')?.hasError('email')">
+      Provide valid email address.
+    </div>
+    <div *ngIf="isEmailTaken">
+      Email is already taken. Please choose a different one.
+    </div>
+  </div>
+
+  <!-- name Field -->
+  <label for="name">Username:</label>
+  <input
+    type="text"
+    id="username"
+    formControlName="name"
+    [ngClass]="{
+      'error-border':
+        registrationForm.get('name')?.invalid &&
+        registrationForm.get('name')?.touched
+    }"
+  />
+  <div class="name-errors-container">
+    <div *ngIf="nameControl?.hasError('required')">Username is required.</div>
+    <div *ngIf="nameControl?.hasError('maxlength')">
+      Username cannot exceed 40 characters.
+    </div>
+    <div *ngIf="nameControl?.hasError('pattern')">
+      Can only contain latin letters and spaces.
+    </div>
+  </div>
+
+  <!-- Password Fields -->
+  <label for="password">Password:</label>
+  <input
+    type="password"
+    id="password"
+    formControlName="password"
+    [ngClass]="{
+      'error-border':
+        registrationForm.get('password')?.invalid &&
+        registrationForm.get('password')?.touched
+    }"
+  />
+  <ul class="password-recommendations">
+    <li *ngIf="registrationForm.get('password')?.hasError('required')">
+      Please enter a password.
+    </li>
+    <li *ngFor="let recommendation of getPasswordRecommendations()">
+      {{ recommendation }}
+    </li>
+  </ul>
+
+  <!-- Confirm Password Field -->
+  <label for="confirmPassword">Confirm Password:</label>
+  <input
+    type="password"
+    id="confirmPassword"
+    formControlName="confirmPassword"
+    [ngClass]="{
+      'error-border':
+        registrationForm.hasError('passwordMismatch') &&
+        registrationForm.get('confirmPassword')?.touched
+    }"
+  />
+  <div class="confirm-pass-error">
+    <div *ngIf="registrationForm.hasError('passwordMismatch')">
+      Passwords do not match.
+    </div>
+  </div>
+
+  <div class="buttons-container">
+    <a routerLink="/signin" mat-button>Login</a>
+
+    <button
+      type="submit"
+      [disabled]="!registrationForm.valid || isSubmitting"
+      class="button"
+      mat-button
+    >
+      Register
+    </button>
+  </div>
+</form>
