@@ -8,6 +8,9 @@ import {
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { RegistrationService } from '../services/regestration.service';
+import { HttpResponse } from '@angular/common/http';
+import { RegistrationResponse } from 'src/app/shared/interfaces/interfaces';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-registration',
@@ -18,17 +21,25 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   registrationForm!: FormGroup;
   isSubmitting = false;
 
-  private authSubscription: Subscription | undefined;
-  isAuthenticated$!: Observable<boolean>;
+  // private authSubscription: Subscription | undefined;
+  // isAuthenticated$!: Observable<boolean>;
 
   constructor(
     private fb: FormBuilder,
     private registrationService: RegistrationService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) // private authService: AuthService,
+  {}
 
   ngOnInit(): void {
     this.createForm();
+    // this.isAuthenticated$ = this.authService.isLoggedIn;
+    // this.isAuthenticated$.subscribe((isLoggedIn) => {
+    //   if (isLoggedIn) {
+    //     this.router.navigate(['/main']);
+    //   }
+    // });
   }
 
   createForm() {
@@ -115,19 +126,34 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       const formData = this.registrationForm.value;
 
       this.registrationService.registerUser(formData).subscribe(
-        () => {
-          console.log('Registration successful');
+        (response: HttpResponse<RegistrationResponse>) => {
+          if (response.status === 201) {
+            this.snackBar.open('Registration successful!', 'OK', {
+              duration: 2000,
+              panelClass: ['mat-accent'],
+            });
+            this.isSubmitting = false;
+            this.router.navigate(['/signin']);
+          }
         },
         (error) => {
-          console.error('Registration failed', error);
+          this.snackBar.open(
+            `Registration failed: ${error.error.message}`,
+            'OK',
+            {
+              duration: 4000,
+              panelClass: ['mat-error'],
+            }
+          );
+          this.isSubmitting = false;
         }
       );
     }
   }
 
   ngOnDestroy(): void {
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
-    }
+    // if (this.authSubscription) {
+    //   this.authSubscription.unsubscribe();
+    // }
   }
 }
