@@ -1,0 +1,49 @@
+::ng-deep app-login {
+  display: flex;
+  justify-content: center;
+  margin-top: 45px;
+}
+
+.login-form-wrapper {
+  background: #f2f2f2;
+  padding: 30px 20px;
+  width: fit-content;
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    width: 310px;
+
+    .login-form-submit-button {
+      background: #2f80ed;
+      color: #ffffff;
+      width: 124px;
+      height: 30px;
+      margin-left: auto;
+      font-size: 12px;
+    }
+  }
+  .buttons-container {
+    display: flex;
+    justify-content: space-between;
+
+    a {
+      background: transparent;
+      color: #2f80ed;
+      width: 124px;
+      height: 30px;
+      text-decoration: underline;
+    }
+    .button {
+      background: #2f80ed;
+      color: #ffffff;
+      width: 124px;
+      height: 30px;
+      font-size: 12px;
+    }
+    .button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
