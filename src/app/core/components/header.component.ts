@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-header',
   template: `<header class="header-content-wrapper">
     <div class="logo-container">
-      <a routerLink="#" aria-label="Logo">
+      <a routerLink="/" aria-label="Logo">
         <img class="logo" src="assets/logo.png" alt="site logo" />
       </a>
     </div>
