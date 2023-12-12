@@ -4,6 +4,8 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
+  ValidationErrors,
+  ValidatorFn,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -20,6 +22,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class RegistrationComponent implements OnInit, OnDestroy {
   registrationForm!: FormGroup;
   isSubmitting = false;
+  alreadyExistsEmails: string[] = [];
+  isEmailTaken = false;
 
   // private authSubscription: Subscription | undefined;
   // isAuthenticated$!: Observable<boolean>;
@@ -28,9 +32,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private registrationService: RegistrationService,
     private router: Router,
-    private snackBar: MatSnackBar
-  ) // private authService: AuthService,
-  {}
+    private snackBar: MatSnackBar // private authService: AuthService,
+  ) {}
 
   ngOnInit(): void {
     this.createForm();
@@ -45,7 +48,14 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   createForm() {
     this.registrationForm = this.fb.group(
       {
-        email: ['', [Validators.required, Validators.email]],
+        email: [
+          '',
+          [
+            Validators.required,
+            Validators.email,
+            this.emailAlreadyExistsValidator(),
+          ],
+        ],
         name: [
           '',
           [
@@ -65,6 +75,20 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       },
       { validator: RegistrationComponent.passwordMatchValidator }
     );
+  }
+
+  emailAlreadyExistsValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const enteredEmail = control.value as string;
+
+      if (this.alreadyExistsEmails.includes(enteredEmail)) {
+        this.isEmailTaken = true;
+        return { emailExists: true };
+      }
+
+      this.isEmailTaken = false;
+      return null;
+    };
   }
 
   get nameControl(): AbstractControl | null {
@@ -132,11 +156,20 @@ export class RegistrationComponent implements OnInit, OnDestroy {
               duration: 2000,
               panelClass: ['mat-accent'],
             });
-            this.isSubmitting = false;
             this.router.navigate(['/signin']);
+            this.isSubmitting = false;
           }
         },
         (error) => {
+          if (
+            error.error &&
+            error.error.type === 'PrimaryDuplicationException'
+          ) {
+            this.isEmailTaken = true;
+            this.registrationForm.get('email')?.setErrors({ taken: true });
+            this.alreadyExistsEmails.push(formData.email);
+          }
+
           this.snackBar.open(
             `Registration failed: ${error.error.message}`,
             'OK',

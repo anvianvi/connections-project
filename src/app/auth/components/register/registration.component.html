@@ -23,6 +23,9 @@
     <div *ngIf="registrationForm.get('email')?.hasError('email')">
       Provide valid email address.
     </div>
+    <div *ngIf="isEmailTaken">
+      Email is already taken. Please choose a different one.
+    </div>
   </div>
 
   <!-- name Field -->
