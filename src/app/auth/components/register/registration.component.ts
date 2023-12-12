@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+import { RegistrationService } from '../services/regestration.service';
 
 @Component({
   selector: 'app-registration',
@@ -15,21 +16,26 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class RegistrationComponent implements OnInit, OnDestroy {
   registrationForm!: FormGroup;
+  isSubmitting = false;
 
   private authSubscription: Subscription | undefined;
   isAuthenticated$!: Observable<boolean>;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private registrationService: RegistrationService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
     this.createForm();
   }
-
-  ngOnInit(): void {}
 
   createForm() {
     this.registrationForm = this.fb.group(
       {
         email: ['', [Validators.required, Validators.email]],
-        username: [
+        name: [
           '',
           [
             Validators.required,
@@ -50,8 +56,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     );
   }
 
-  get usernameControl(): AbstractControl | null {
-    return this.registrationForm.get('username');
+  get nameControl(): AbstractControl | null {
+    return this.registrationForm.get('name');
   }
 
   static passwordStrengthValidator(
@@ -103,7 +109,21 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     return recommendations;
   }
 
-  onSubmit() {}
+  onSubmit() {
+    if (this.registrationForm.valid && !this.isSubmitting) {
+      this.isSubmitting = true;
+      const formData = this.registrationForm.value;
+
+      this.registrationService.registerUser(formData).subscribe(
+        () => {
+          console.log('Registration successful');
+        },
+        (error) => {
+          console.error('Registration failed', error);
+        }
+      );
+    }
+  }
 
   ngOnDestroy(): void {
     if (this.authSubscription) {

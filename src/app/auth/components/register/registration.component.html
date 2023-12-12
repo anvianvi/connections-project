@@ -25,26 +25,24 @@
     </div>
   </div>
 
-  <!-- Username Field -->
-  <label for="username">Username:</label>
+  <!-- name Field -->
+  <label for="name">Username:</label>
   <input
     type="text"
     id="username"
-    formControlName="username"
+    formControlName="name"
     [ngClass]="{
       'error-border':
-        registrationForm.get('username')?.invalid &&
-        registrationForm.get('username')?.touched
+        registrationForm.get('name')?.invalid &&
+        registrationForm.get('name')?.touched
     }"
   />
-  <div class="username-errors-container">
-    <div *ngIf="usernameControl?.hasError('required')">
-      Username is required.
-    </div>
-    <div *ngIf="usernameControl?.hasError('maxlength')">
+  <div class="name-errors-container">
+    <div *ngIf="nameControl?.hasError('required')">Username is required.</div>
+    <div *ngIf="nameControl?.hasError('maxlength')">
       Username cannot exceed 40 characters.
     </div>
-    <div *ngIf="usernameControl?.hasError('pattern')">
+    <div *ngIf="nameControl?.hasError('pattern')">
       Can only contain latin letters and spaces.
     </div>
   </div>
@@ -93,7 +91,7 @@
 
     <button
       type="submit"
-      [disabled]="!registrationForm.valid"
+      [disabled]="!registrationForm.valid || isSubmitting"
       class="button"
       mat-button
     >
