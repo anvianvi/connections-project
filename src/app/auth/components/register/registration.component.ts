@@ -157,6 +157,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
             this.snackBar.open('Registration successful!', 'OK', {
               duration: 2000,
               panelClass: ['mat-accent'],
+              horizontalPosition: 'right',
             });
             this.router.navigate(['/signin']);
             this.isSubmitting = false;
@@ -178,6 +179,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
             {
               duration: 4000,
               panelClass: ['mat-error'],
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
             }
           );
           this.isSubmitting = false;

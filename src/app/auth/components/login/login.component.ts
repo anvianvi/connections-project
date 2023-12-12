@@ -1,17 +1,5 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -29,8 +17,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   isAuthenticated$!: Observable<boolean>;
   private authSubscription: Subscription | undefined;
   isSubmitting = false;
+  public errorType: string | null = null;
 
   constructor(
+    private fb: FormBuilder,
     private loginService: LogInService,
     private authService: AuthService,
     private router: Router,
@@ -44,13 +34,16 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.router.navigate(['/']);
       }
     });
+    this.form.valueChanges.subscribe(() => {
+      this.errorType = null;
+    });
   }
 
   hide = true;
 
-  form: FormGroup = new FormGroup({
-    email: new FormControl(''),
-    password: new FormControl(''),
+  form: FormGroup = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required],
   });
 
   submit() {
@@ -71,18 +64,23 @@ export class LoginComponent implements OnInit, OnDestroy {
               this.snackBar.open('LogIn successful!', 'OK', {
                 duration: 2000,
                 panelClass: ['mat-accent'],
+                horizontalPosition: 'right',
               });
               this.router.navigate(['/']);
               this.isSubmitting = false;
             }
           },
           (error) => {
+            this.errorType = error.error.type;
+
             this.snackBar.open(
-              `Registration failed!${error.error.type}: ${error.error.message}`,
+              `Registration failed! ${error.error.message}`,
               'OK',
               {
-                duration: 3000,
+                duration: 5000,
                 panelClass: ['mat-error'],
+                horizontalPosition: 'center',
+                verticalPosition: 'top',
               }
             );
             this.isSubmitting = false;
@@ -90,8 +88,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         );
     }
   }
-
-  // @Output() submitEM = new EventEmitter();
 
   ngOnDestroy(): void {
     if (this.authSubscription) {

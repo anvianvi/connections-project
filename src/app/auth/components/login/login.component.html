@@ -5,6 +5,9 @@
     <mat-form-field appearance="fill">
       <mat-label>email</mat-label>
       <input placeholder="" matInput formControlName="email" required />
+      <mat-error *ngIf="form.get('email')?.hasError('email')"
+        >Invalid email format</mat-error
+      >
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -34,7 +37,9 @@
         class="login-form-submit-button"
         type="submit"
         mat-button
-        [disabled]="!form.valid || isSubmitting"
+        [disabled]="
+          !form.valid || isSubmitting || errorType === 'NotFoundException'
+        "
       >
         Login
       </button>
