@@ -1,7 +1,7 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RegistrationResponse } from 'src/app/shared/interfaces/interfaces';
+import { LoginResponse } from 'src/app/shared/interfaces/interfaces';
 import { API_URL } from 'src/app/shared/variables/api';
 
 @Injectable({
@@ -13,10 +13,10 @@ export class LogInService {
   login(
     email: string,
     password: string
-  ): Observable<HttpResponse<RegistrationResponse>> {
+  ): Observable<HttpResponse<LoginResponse>> {
     const body = { email, password };
 
-    return this.http.post<RegistrationResponse>(`${API_URL}/login`, body, {
+    return this.http.post<LoginResponse>(`${API_URL}/login`, body, {
       observe: 'response',
     });
   }

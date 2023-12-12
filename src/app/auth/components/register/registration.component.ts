@@ -13,6 +13,7 @@ import { RegistrationService } from '../../services/regestration.service';
 import { HttpResponse } from '@angular/common/http';
 import { RegistrationResponse } from 'src/app/shared/interfaces/interfaces';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-registration',
@@ -25,24 +26,25 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   alreadyExistsEmails: string[] = [];
   isEmailTaken = false;
 
-  // private authSubscription: Subscription | undefined;
-  // isAuthenticated$!: Observable<boolean>;
+  isAuthenticated$!: Observable<boolean>;
+  private authSubscription: Subscription | undefined;
 
   constructor(
     private fb: FormBuilder,
     private registrationService: RegistrationService,
     private router: Router,
-    private snackBar: MatSnackBar // private authService: AuthService,
+    private snackBar: MatSnackBar,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.createForm();
-    // this.isAuthenticated$ = this.authService.isLoggedIn;
-    // this.isAuthenticated$.subscribe((isLoggedIn) => {
-    //   if (isLoggedIn) {
-    //     this.router.navigate(['/main']);
-    //   }
-    // });
+    this.isAuthenticated$ = this.authService.isAuthenticated();
+    this.isAuthenticated$.subscribe((isAuthenticated) => {
+      if (isAuthenticated) {
+        this.router.navigate(['/']);
+      }
+    });
   }
 
   createForm() {
@@ -185,8 +187,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // if (this.authSubscription) {
-    //   this.authSubscription.unsubscribe();
-    // }
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 }

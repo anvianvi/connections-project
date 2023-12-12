@@ -10,8 +10,8 @@ export interface RegistrationResponse {
 }
 
 export interface LoginResponse {
-  token?: string;
-  uid?: string;
+  token: string;
+  uid: string;
   type: string;
   message: string;
 }

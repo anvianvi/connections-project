@@ -27,14 +27,15 @@
       </button>
     </mat-form-field>
 
-    <p *ngIf="error" class="error">
-      {{ error }}
-    </p>
-
     <div class="buttons-container">
       <a routerLink="/signup" mat-button>Registration</a>
 
-      <button class="login-form-submit-button" type="submit" mat-button>
+      <button
+        class="login-form-submit-button"
+        type="submit"
+        mat-button
+        [disabled]="!form.valid || isSubmitting"
+      >
         Login
       </button>
     </div>
