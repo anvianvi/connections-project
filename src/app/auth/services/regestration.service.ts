@@ -5,18 +5,22 @@ import {
   NewUser,
   RegistrationResponse,
 } from 'src/app/shared/interfaces/interfaces';
+import { API_URL } from 'src/app/shared/variables/api';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RegistrationService {
-  private apiUrl = 'https://tasks.app.rs.school/angular/registration';
 
   constructor(private http: HttpClient) {}
 
   registerUser(data: NewUser): Observable<HttpResponse<RegistrationResponse>> {
-    return this.http.post<RegistrationResponse>(this.apiUrl, data, {
-      observe: 'response',
-    });
+    return this.http.post<RegistrationResponse>(
+      `${API_URL}/registration`,
+      data,
+      {
+        observe: 'response',
+      }
+    );
   }
 }

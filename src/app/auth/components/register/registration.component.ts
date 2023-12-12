@@ -9,10 +9,11 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { RegistrationService } from '../services/regestration.service';
+import { RegistrationService } from '../../services/regestration.service';
 import { HttpResponse } from '@angular/common/http';
 import { RegistrationResponse } from 'src/app/shared/interfaces/interfaces';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-registration',
@@ -25,24 +26,25 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   alreadyExistsEmails: string[] = [];
   isEmailTaken = false;
 
-  // private authSubscription: Subscription | undefined;
-  // isAuthenticated$!: Observable<boolean>;
+  isAuthenticated$!: Observable<boolean>;
+  private authSubscription: Subscription | undefined;
 
   constructor(
     private fb: FormBuilder,
     private registrationService: RegistrationService,
     private router: Router,
-    private snackBar: MatSnackBar // private authService: AuthService,
+    private snackBar: MatSnackBar,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.createForm();
-    // this.isAuthenticated$ = this.authService.isLoggedIn;
-    // this.isAuthenticated$.subscribe((isLoggedIn) => {
-    //   if (isLoggedIn) {
-    //     this.router.navigate(['/main']);
-    //   }
-    // });
+    this.isAuthenticated$ = this.authService.isAuthenticated();
+    this.isAuthenticated$.subscribe((isAuthenticated) => {
+      if (isAuthenticated) {
+        this.router.navigate(['/']);
+      }
+    });
   }
 
   createForm() {
@@ -155,6 +157,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
             this.snackBar.open('Registration successful!', 'OK', {
               duration: 2000,
               panelClass: ['mat-accent'],
+              horizontalPosition: 'right',
             });
             this.router.navigate(['/signin']);
             this.isSubmitting = false;
@@ -176,6 +179,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
             {
               duration: 4000,
               panelClass: ['mat-error'],
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
             }
           );
           this.isSubmitting = false;
@@ -185,8 +190,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // if (this.authSubscription) {
-    //   this.authSubscription.unsubscribe();
-    // }
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 }

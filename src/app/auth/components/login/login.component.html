@@ -1,0 +1,48 @@
+<div class="login-form-wrapper">
+  <h2>Login</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+    <mat-form-field appearance="fill">
+      <mat-label>email</mat-label>
+      <input placeholder="" matInput formControlName="email" required />
+      <mat-error *ngIf="form.get('email')?.hasError('email')"
+        >Invalid email format</mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>password</mat-label>
+      <input
+        placeholder=""
+        matInput
+        formControlName="password"
+        [type]="hide ? 'password' : 'text'"
+        required
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hide = !hide"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide"
+      >
+        <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <div class="buttons-container">
+      <a routerLink="/signup" mat-button>Registration</a>
+
+      <button
+        class="login-form-submit-button"
+        type="submit"
+        mat-button
+        [disabled]="
+          !form.valid || isSubmitting || errorType === 'NotFoundException'
+        "
+      >
+        Login
+      </button>
+    </div>
+  </form>
+</div>
