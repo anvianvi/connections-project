@@ -42,13 +42,12 @@ import { LocalStorageService } from '../services/localStorage.service';
 export class LoginInfoComponent implements OnInit {
   name!: string | null;
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {}
 
   openProfile(): void {
-    console.log(' need to implement profile');
-    // this.router.navigate(['/profile']);
+    this.router.navigate(['/profile']);
   }
 
   logout(): void {
