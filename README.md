@@ -1,6 +1,6 @@
 - [x] Registration 60 points
 - [x] Login 70 points
-- [ ] Profile 40 points
+- [x] Profile 40 points
 - [ ] Update profile 55 points
 - [ ] Logout 40 points
 - [ ] People and group sections 175 points
