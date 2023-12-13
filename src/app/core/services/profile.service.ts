@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, of, throwError } from 'rxjs';
 import { GetProfileResponse } from 'src/app/shared/interfaces/interfaces';
 import { API_URL } from 'src/app/shared/variables/api';
 
@@ -11,7 +11,7 @@ import { API_URL } from 'src/app/shared/variables/api';
 export class ProfileService {
   constructor(private snackBar: MatSnackBar, private http: HttpClient) {}
 
-  getInfo(): Observable<GetProfileResponse> {
+  fetchInfo(): Observable<GetProfileResponse> {
     return this.http.get<GetProfileResponse>(`${API_URL}/profile`).pipe(
       catchError((error) => {
         this.handleError(error);
@@ -20,8 +20,8 @@ export class ProfileService {
     );
   }
 
-  getProfileInfo() {
-    this.getInfo().subscribe(
+  fetchProfileInfo() {
+    this.fetchInfo().subscribe(
       (response: GetProfileResponse) => {
         if (response) {
           localStorage.setItem('name', response.name.S);

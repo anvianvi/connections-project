@@ -24,9 +24,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private loginService: LogInService,
     private authService: AuthService,
+    private profileServise: ProfileService,
     private router: Router,
-    private snackBar: MatSnackBar,
-    private profileServise: ProfileService
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -65,13 +65,14 @@ export class LoginComponent implements OnInit, OnDestroy {
                 this.form.value.email
               );
 
+              this.profileServise.fetchProfileInfo();
+
               this.snackBar.open('LogIn successful!', 'OK', {
                 duration: 2000,
                 panelClass: ['mat-accent'],
                 horizontalPosition: 'right',
               });
 
-              this.profileServise.getProfileInfo();
               this.router.navigate(['/']);
               this.isSubmitting = false;
             }
