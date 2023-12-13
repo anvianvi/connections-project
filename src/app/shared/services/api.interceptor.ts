@@ -20,9 +20,9 @@ export class ApiInterceptor implements HttpInterceptor {
     if (token && uid && email) {
       request = request.clone({
         setHeaders: {
+          'rs-uid': uid,
+          'rs-email': email,
           Authorization: `Bearer ${token}`,
-          UID: uid,
-          Email: email,
         },
       });
       return next.handle(request);

@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { LogInService } from '../../services/login.service';
 import { LoginResponse } from 'src/app/shared/interfaces/interfaces';
 import { HttpResponse } from '@angular/common/http';
+import { ProfileService } from 'src/app/core/services/profile.service';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private loginService: LogInService,
     private authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private profileServise: ProfileService
   ) {}
 
   ngOnInit(): void {
@@ -55,6 +57,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         .subscribe(
           (response: HttpResponse<LoginResponse>) => {
             if (response.status === 200 && response.body) {
+              localStorage.clear();
+
               this.authService.login(
                 response.body.token,
                 response.body.uid,
@@ -66,6 +70,8 @@ export class LoginComponent implements OnInit, OnDestroy {
                 panelClass: ['mat-accent'],
                 horizontalPosition: 'right',
               });
+
+              this.profileServise.getProfileInfo();
               this.router.navigate(['/']);
               this.isSubmitting = false;
             }

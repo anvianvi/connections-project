@@ -1,0 +1,63 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable, catchError, throwError } from 'rxjs';
+import { GetProfileResponse } from 'src/app/shared/interfaces/interfaces';
+import { API_URL } from 'src/app/shared/variables/api';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ProfileService {
+  constructor(private snackBar: MatSnackBar, private http: HttpClient) {}
+
+  getInfo(): Observable<GetProfileResponse> {
+    return this.http.get<GetProfileResponse>(`${API_URL}/profile`).pipe(
+      catchError((error) => {
+        this.handleError(error);
+        return throwError(error);
+      })
+    );
+  }
+
+  getProfileInfo() {
+    this.getInfo().subscribe(
+      (response: GetProfileResponse) => {
+        if (response) {
+          localStorage.setItem('name', response.name.S);
+          localStorage.setItem('createdAt', response.createdAt.S);
+
+          this.snackBar.open('LogIn successful!', 'OK', {
+            duration: 2000,
+            panelClass: ['mat-accent'],
+            horizontalPosition: 'right',
+          });
+        } else {
+          this.snackBar.open('Oops, something went wrong!', 'OK', {
+            duration: 5000,
+            panelClass: ['mat-error'],
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          });
+        }
+      },
+      (error) => {
+        this.handleError(error);
+      }
+    );
+  }
+
+  private handleError(error: any): void {
+    let errorMessage = 'An error occurred';
+    if (error.error && error.error.message) {
+      errorMessage = error.error.message;
+    }
+
+    this.snackBar.open(errorMessage, 'OK', {
+      duration: 5000,
+      panelClass: ['mat-error'],
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+    });
+  }
+}
