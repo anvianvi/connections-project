@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { LogInService } from '../../services/login.service';
 import { LoginResponse } from 'src/app/shared/interfaces/interfaces';
 import { HttpResponse } from '@angular/common/http';
+import { ProfileService } from 'src/app/core/services/profile.service';
 
 @Component({
   selector: 'app-login',
@@ -23,6 +24,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private loginService: LogInService,
     private authService: AuthService,
+    private profileServise: ProfileService,
     private router: Router,
     private snackBar: MatSnackBar
   ) {}
@@ -55,17 +57,22 @@ export class LoginComponent implements OnInit, OnDestroy {
         .subscribe(
           (response: HttpResponse<LoginResponse>) => {
             if (response.status === 200 && response.body) {
+              localStorage.clear();
+
               this.authService.login(
                 response.body.token,
                 response.body.uid,
                 this.form.value.email
               );
 
+              this.profileServise.fetchProfileInfo();
+
               this.snackBar.open('LogIn successful!', 'OK', {
                 duration: 2000,
                 panelClass: ['mat-accent'],
                 horizontalPosition: 'right',
               });
+
               this.router.navigate(['/']);
               this.isSubmitting = false;
             }

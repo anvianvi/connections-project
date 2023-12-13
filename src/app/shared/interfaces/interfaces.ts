@@ -15,3 +15,18 @@ export interface LoginResponse {
   type: string;
   message: string;
 }
+
+export interface GetProfileResponse {
+  email: {
+    S: string;
+  };
+  name: {
+    S: string;
+  };
+  uid: {
+    S: string;
+  };
+  createdAt: {
+    S: string;
+  };
+}

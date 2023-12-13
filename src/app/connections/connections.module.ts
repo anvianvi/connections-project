@@ -10,4 +10,4 @@ import { MainComponent } from './components/main.component';
   exports: [MainComponent],
   providers: [AuthService],
 })
-export class AnviTubeModule {}
+export class ConnectionsModule {}

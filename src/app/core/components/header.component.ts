@@ -1,13 +1,18 @@
 import { Component } from '@angular/core';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-header',
   template: `<header class="header-content-wrapper">
     <div class="logo-container">
-      <a routerLink="#" aria-label="Logo">
+      <a routerLink="/" aria-label="Logo">
         <img class="logo" src="assets/logo.png" alt="site logo" />
       </a>
     </div>
+
+    <app-login-status-bar
+      *ngIf="authService.isAuthenticated() | async"
+    ></app-login-status-bar>
   </header> `,
   styles: [
     `
@@ -45,4 +50,6 @@ import { Component } from '@angular/core';
     `,
   ],
 })
-export class HeaderComponent {}
+export class HeaderComponent {
+  constructor(public authService: AuthService) {}
+}
