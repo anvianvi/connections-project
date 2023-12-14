@@ -11,6 +11,12 @@ import { DateService } from '../services/data.service';
       <p><strong>Email:</strong> {{ userEmail }}</p>
       <p><strong>Creation Time:</strong> {{ profileCreationTime }}</p>
       <p><strong>User Name:</strong> {{ userName }}</p>
+      <button *ngIf="!isEditing" (click)="startEditing()">Edit</button>
+      <div *ngIf="isEditing">
+        <input [(ngModel)]="editedName" placeholder="Enter your name" />
+        <button (click)="saveChanges()" [disabled]="isSaving">Save</button>
+        <button (click)="cancelEditing()" [disabled]="isSaving">Cancel</button>
+      </div>
     </div>
   `,
   styles: [
@@ -37,6 +43,9 @@ export class ProfilePageComponent implements OnInit {
   userEmail!: string;
   profileCreationTime!: string;
   userName!: string;
+  editedName: string = '';
+  isEditing: boolean = false;
+  isSaving: boolean = false;
 
   constructor(private dateService: DateService) {}
 
@@ -48,5 +57,25 @@ export class ProfilePageComponent implements OnInit {
     this.profileCreationTime = this.dateService.formatUnixTimestamp(
       this.profileCreationTime
     );
+  }
+
+  startEditing() {
+    this.isEditing = true;
+    this.editedName = this.userName;
+  }
+
+  saveChanges() {
+    // TODO: Implement HTTP request to update profile
+    this.isSaving = true;
+    // Assume a successful update for now
+    this.userName = this.editedName;
+    this.isEditing = false;
+    this.isSaving = false;
+    // TODO: Display success toast
+  }
+
+  cancelEditing() {
+    this.isEditing = false;
+    this.editedName = ''; // Reset the edited name
   }
 }
