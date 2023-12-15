@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { DateService } from '../services/data.service';
 import { ProfileService } from '../services/profile.service';
 import { HttpResponse } from '@angular/common/http';
@@ -125,7 +124,6 @@ export class ProfilePageComponent implements OnInit {
         }
       },
       (error) => {
-        console.log(error);
         this.snackBar.open(`Uups smth go wrong ${error.message}`, 'OK', {
           duration: 5000,
           panelClass: ['mat-error'],

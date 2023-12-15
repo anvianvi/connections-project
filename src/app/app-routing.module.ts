@@ -36,7 +36,6 @@ const routes: Routes = [
     pathMatch: 'full',
     canActivate: [AuthGuard],
   },
-  // { path: 'second-component', component: SecondComponent },
   { path: '', redirectTo: '/signin', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];

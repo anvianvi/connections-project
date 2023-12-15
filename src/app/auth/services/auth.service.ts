@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { ProfileService } from 'src/app/core/services/profile.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +7,7 @@ import { ProfileService } from 'src/app/core/services/profile.service';
 export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
 
-  constructor(private profileServise: ProfileService) {
+  constructor() {
     this.checkAuthentication();
   }
 
