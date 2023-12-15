@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { RegistrationService } from '../../services/regestration.service';
 import { HttpResponse } from '@angular/common/http';
-import { RegistrationResponse } from 'src/app/shared/interfaces/interfaces';
+import { ServerResponse } from 'src/app/shared/interfaces/interfaces';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
 
@@ -152,7 +152,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       const formData = this.registrationForm.value;
 
       this.registrationService.registerUser(formData).subscribe(
-        (response: HttpResponse<RegistrationResponse>) => {
+        (response: HttpResponse<ServerResponse>) => {
           if (response.status === 201) {
             this.snackBar.open('Registration successful!', 'OK', {
               duration: 2000,
