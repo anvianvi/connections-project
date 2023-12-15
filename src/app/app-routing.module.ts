@@ -34,6 +34,7 @@ const routes: Routes = [
     loadChildren: () => import('./core/core.module').then((m) => m.CoreModule),
     component: ProfilePageComponent,
     pathMatch: 'full',
+    canActivate: [AuthGuard],
   },
   // { path: 'second-component', component: SecondComponent },
   { path: '', redirectTo: '/signin', pathMatch: 'full' },

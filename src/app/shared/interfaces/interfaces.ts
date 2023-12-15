@@ -4,7 +4,12 @@ export interface NewUser {
   password: string;
 }
 
-export interface RegistrationResponse {
+export interface ServerResponse {
+  status: number;
+  error?: ErrorResponse;
+}
+
+export interface ErrorResponse {
   type: string;
   message: string;
 }
