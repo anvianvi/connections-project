@@ -1,8 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, catchError, of, throwError } from 'rxjs';
-import { GetProfileResponse } from 'src/app/shared/interfaces/interfaces';
+import {
+  GetProfileResponse,
+  ServerResponse,
+} from 'src/app/shared/interfaces/interfaces';
 import { API_URL } from 'src/app/shared/variables/api';
 
 @Injectable({
@@ -17,6 +20,16 @@ export class ProfileService {
         this.handleError(error);
         return throwError(error);
       })
+    );
+  }
+
+  putUserName(name: string): Observable<HttpResponse<ServerResponse>> {
+    return this.http.put<ServerResponse>(
+      `${API_URL}/profile`,
+      { name },
+      {
+        observe: 'response',
+      }
     );
   }
 
