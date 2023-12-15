@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { LocalStorageService } from '../services/localStorage.service';
+import { LogoutService } from '../services/logout.service';
+import { ServerResponse } from 'src/app/shared/interfaces/interfaces';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-login-status-bar',
@@ -13,7 +16,9 @@ import { LocalStorageService } from '../services/localStorage.service';
       />
       <mat-menu #beforeMenu="matMenu" xPosition="before">
         <button mat-menu-item (click)="openProfile()">Profile</button>
-        <button mat-menu-item (click)="logout()">Logout</button>
+        <button mat-menu-item (click)="logout()" [disabled]="isFetching">
+          Logout
+        </button>
       </mat-menu>
     </div>
   `,
@@ -41,8 +46,14 @@ import { LocalStorageService } from '../services/localStorage.service';
 })
 export class LoginInfoComponent implements OnInit {
   name!: string | null;
+  isFetching: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private logoutService: LogoutService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -50,8 +61,41 @@ export class LoginInfoComponent implements OnInit {
     this.router.navigate(['/profile']);
   }
 
-  logout(): void {
-    console.log(' need to implement logout');
-    // this.router.navigate(['/']);
+  logout() {
+    this.isFetching = true;
+
+    this.logoutService.logout().subscribe(
+      (response: ServerResponse) => {
+        console.log(response);
+        if (response.status === 200) {
+          this.snackBar.open('Logout successful, we will miss you! ', 'OK', {
+            duration: 10000,
+            panelClass: ['mat-accent'],
+            horizontalPosition: 'right',
+          });
+          this.isFetching = false;
+
+          this.authService.logout();
+          sessionStorage.clear();
+          localStorage.clear();
+          document.cookie.split(';').forEach((cookie) => {
+            const [name] = cookie.split('=');
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+          });
+          location.reload();
+        }
+      },
+      (error) => {
+        console.log(error);
+
+        this.snackBar.open(`Uups smth go wrong ${error.message}`, 'OK', {
+          duration: 5000,
+          panelClass: ['mat-error'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+        this.isFetching = false;
+      }
+    );
   }
 }
