@@ -8,6 +8,7 @@ import { HeaderComponent } from './components/header.component';
 import { LoginInfoComponent } from './components/login-status-bar.component';
 import { ProfilePageComponent } from './pages/profile-page.component';
 import { DateService } from './services/data.service';
+import { AuthModule } from '../auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,7 @@ import { DateService } from './services/data.service';
     LoginInfoComponent,
     ProfilePageComponent,
   ],
-  imports: [CommonModule, RouterModule, SharedModule],
+  imports: [CommonModule, RouterModule, SharedModule, AuthModule],
   exports: [FooterComponent, HeaderComponent],
   providers: [DatePipe, DateService],
 })
