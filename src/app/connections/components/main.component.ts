@@ -35,8 +35,6 @@ export class MainComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-
-    
     console.log('u are on main');
     console.log(localStorage);
   }
