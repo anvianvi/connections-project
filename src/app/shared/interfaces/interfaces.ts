@@ -35,3 +35,16 @@ export interface GetProfileResponse {
     S: string;
   };
 }
+
+export interface GetGroupListResponse {
+  status: number;
+  Count: number;
+  Items: GroupItem[];
+}
+
+export interface GroupItem {
+  id: { S: string };
+  name: { S: string };
+  createdAt: { S: string };
+  createdBy: { S: string };
+}

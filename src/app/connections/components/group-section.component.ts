@@ -1,18 +1,23 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { GroupService } from '../services/group-serices.service';
+import { GetGroupListResponse } from 'src/app/shared/interfaces/interfaces';
+import { HttpResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-group-section',
   template: `
     <div class="group">
-      My test group
       <div>
         <button (click)="updateList('groupList')" [disabled]="isButtonDisabled">
-          Update Countdown 1
+          Update
         </button>
         <span *ngIf="counter > 0">
           {{ counter }} seconds until next update
         </span>
+        <button>create(tbd)</button>
       </div>
+      <h3>List of groups</h3>
     </div>
   `,
   styles: [
@@ -32,16 +37,22 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
   counter: number = 0;
   timer: ReturnType<typeof setTimeout> | undefined;
   isButtonDisabled = false;
+  data!: GetGroupListResponse | null;
 
-  constructor() {}
+  constructor(
+    private groupService: GroupService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit() {
     this.startCountdown('groupList');
+    this.fetchGroupList();
   }
 
   ngOnDestroy(): void {}
 
   updateList(identifier: string): void {
+    this.fetchGroupList();
     this.isButtonDisabled = true;
     localStorage.setItem(
       `lastClickTimestamp_${identifier}`,
@@ -72,5 +83,30 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
         this.isButtonDisabled = false;
       }
     }, 1000);
+  }
+
+  fetchGroupList() {
+    this.groupService.getGroupList().subscribe(
+      (response: HttpResponse<GetGroupListResponse>) => {
+        console.log(response);
+        if (response.status === 200) {
+          this.snackBar.open('GroupListResived', 'OK', {
+            duration: 10000,
+            panelClass: ['mat-accent'],
+            horizontalPosition: 'right',
+          });
+          this.data = response.body;
+        }
+      },
+      (error) => {
+        this.snackBar.open(`Uups smth go wrong ${error.message}`, 'OK', {
+          duration: 5000,
+          panelClass: ['mat-error'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+        this.isButtonDisabled = false;
+      }
+    );
   }
 }

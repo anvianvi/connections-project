@@ -66,7 +66,6 @@ export class LoginInfoComponent implements OnInit {
 
     this.logoutService.logout().subscribe(
       (response: ServerResponse) => {
-        console.log(response);
         if (response.status === 200) {
           this.snackBar.open('Logout successful, we will miss you! ', 'OK', {
             duration: 10000,
@@ -86,8 +85,6 @@ export class LoginInfoComponent implements OnInit {
         }
       },
       (error) => {
-        console.log(error);
-
         this.snackBar.open(`Uups smth go wrong ${error.message}`, 'OK', {
           duration: 5000,
           panelClass: ['mat-error'],
