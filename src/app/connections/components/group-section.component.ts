@@ -3,6 +3,7 @@ import { GroupService } from '../services/group-serices.service';
 import { GetGroupListResponse } from 'src/app/shared/interfaces/interfaces';
 import { HttpResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-group-section',
@@ -18,6 +19,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
         <button>create(tbd)</button>
       </div>
       <h3>List of groups</h3>
+    </div>
+    <div *ngIf="groupsList$ | async as groupsList">
+      <p *ngFor="let group of groupsList.Items">
+        {{ group.name.S }}
+      </p>
     </div>
   `,
   styles: [
@@ -37,7 +43,7 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
   counter: number = 0;
   timer: ReturnType<typeof setTimeout> | undefined;
   isButtonDisabled = false;
-  data!: GetGroupListResponse | null;
+  groupsList$: Observable<GetGroupListResponse | null> = of(null);
 
   constructor(
     private groupService: GroupService,
@@ -87,26 +93,33 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
 
   fetchGroupList() {
     this.groupService.getGroupList().subscribe(
-      (response: HttpResponse<GetGroupListResponse>) => {
-        console.log(response);
-        if (response.status === 200) {
-          this.snackBar.open('GroupListResived', 'OK', {
-            duration: 10000,
-            panelClass: ['mat-accent'],
-            horizontalPosition: 'right',
-          });
-          this.data = response.body;
-        }
-      },
-      (error) => {
-        this.snackBar.open(`Uups smth go wrong ${error.message}`, 'OK', {
-          duration: 5000,
-          panelClass: ['mat-error'],
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
-        this.isButtonDisabled = false;
-      }
+      (response: HttpResponse<GetGroupListResponse>) =>
+        this.handleGroupListSuccess(response),
+      (error) => this.handleGroupListError(error)
     );
+  }
+
+  private handleGroupListSuccess(
+    response: HttpResponse<GetGroupListResponse>
+  ): void {
+    if (response.status === 200) {
+      this.snackBar.open('GroupListReceived', 'OK', {
+        duration: 10000,
+        panelClass: ['mat-accent'],
+        horizontalPosition: 'right',
+      });
+      console.log(response.body);
+      this.groupsList$ = of(response.body);
+    }
+  }
+
+  private handleGroupListError(error: any): void {
+    this.snackBar.open(`Oops, something went wrong: ${error.message}`, 'OK', {
+      duration: 5000,
+      panelClass: ['mat-error'],
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+    });
+    this.isButtonDisabled = false;
   }
 }
