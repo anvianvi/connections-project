@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
     `
       ::ng-deep app-main {
         display: flex;
-        justify-content: center; 
+        justify-content: center;
         align-items: center;
         flex-wrap: flex-wrap;
         height: 100%;
@@ -33,8 +33,5 @@ import { Component, OnInit } from '@angular/core';
 export class MainPageComponent implements OnInit {
   constructor() {}
 
-  ngOnInit() {
-    console.log('u are on main');
-    console.log(localStorage);
-  }
+  ngOnInit() {}
 }
