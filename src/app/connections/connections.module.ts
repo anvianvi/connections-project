@@ -2,12 +2,13 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AuthService } from '../auth/services/auth.service';
 import { SharedModule } from '../shared/shared.module';
-import { MainComponent } from './components/main.component';
+import { MainPageComponent } from './components/main.component';
+import { GroupSectionComponent } from './components/group-section.component';
 
 @NgModule({
-  declarations: [MainComponent],
+  declarations: [MainPageComponent, GroupSectionComponent],
   imports: [CommonModule, SharedModule],
-  exports: [MainComponent],
+  exports: [MainPageComponent],
   providers: [AuthService],
 })
 export class ConnectionsModule {}
