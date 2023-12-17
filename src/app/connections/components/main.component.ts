@@ -20,7 +20,6 @@ import { Component, OnInit } from '@angular/core';
 
       .main-column {
         background: lightblue;
-        flex: 1;
         min-width: 360px;
         height: 100%;
       }
