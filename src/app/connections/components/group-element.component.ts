@@ -38,7 +38,7 @@ import { GroupItem } from 'src/app/shared/interfaces/interfaces';
           cursor: pointer;
           text-decoration: dashed;
           text-decoration: underline;
-          font-weight: 700;
+          font-weight: 500;
         }
       }
     `,
@@ -55,10 +55,6 @@ export class GrupCardComponent {
     }
   }
 
-  navigateToDetails(groupId: string) {
-    this.router.navigate(['/group', groupId]);
-  }
-
   @Input() group!: GroupItem;
   @Input() currentuser!: string;
 
@@ -67,8 +63,9 @@ export class GrupCardComponent {
     console.log('implement delite groupe');
   }
 
-  openGroupe(id: string) {
-    console.log(id);
+  openGroupe(groupId: string) {
+    console.log(groupId);
+    // this.router.navigate(['/group', groupId]);
     console.log('implement open groupe');
   }
 }

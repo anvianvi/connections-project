@@ -7,6 +7,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from './core/core.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ApiInterceptor } from './shared/services/api.interceptor';
+import { StoreModule } from '@ngrx/store';
+import { rootReducer } from './state/state.model';
+import { groupReducer } from './state/reducers/group.reducer';
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,6 +19,9 @@ import { ApiInterceptor } from './shared/services/api.interceptor';
     BrowserAnimationsModule,
     HttpClientModule,
     CoreModule,
+    StoreModule.forRoot({
+      groups: groupReducer,
+    }),
   ],
   providers: [
     {

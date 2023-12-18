@@ -1,11 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GroupService } from '../services/group-serices.service';
-import { GetGroupListResponse } from 'src/app/shared/interfaces/interfaces';
+import {
+  GetGroupListResponse,
+  GroupItem,
+} from 'src/app/shared/interfaces/interfaces';
 import { HttpResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, of } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateGroupModalComponent } from './create-groupe-modal.component';
+import { select, Store } from '@ngrx/store';
+import { AppState } from 'src/app/state/state.model';
+import { selectGroups } from 'src/app/state/selectors/group.selectors';
+import { updateGroupsList } from 'src/app/state/actions/group.actions';
 
 @Component({
   selector: 'app-group-section',
@@ -31,7 +38,7 @@ import { CreateGroupModalComponent } from './create-groupe-modal.component';
       </div>
       <div *ngIf="groupsList$ | async as groupsList">
         <app-group-card
-          *ngFor="let group of groupsList.Items"
+          *ngFor="let group of groupsList"
           [group]="group"
           [currentuser]="currentuser"
         ></app-group-card>
@@ -72,10 +79,11 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
   counter: number = 0;
   timer: ReturnType<typeof setTimeout> | undefined;
   isButtonDisabled = false;
-  groupsList$: Observable<GetGroupListResponse | null> = of(null);
   currentuser!: string;
+  groupsList$!: Observable<GroupItem[]>;
 
   constructor(
+    private store: Store<AppState>,
     private groupService: GroupService,
     private snackBar: MatSnackBar,
     public dialog: MatDialog
@@ -85,6 +93,7 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
     this.startCountdown('groupList');
     this.fetchGroupList();
     this.currentuser = localStorage.getItem('uid') || '1';
+    this.groupsList$ = this.store.pipe(select(selectGroups));
   }
 
   ngOnDestroy(): void {}
@@ -134,14 +143,13 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
   private handleGroupListSuccess(
     response: HttpResponse<GetGroupListResponse>
   ): void {
-    if (response.status === 200) {
+    if (response.status === 200 && response.body) {
       this.snackBar.open('GroupListReceived', 'OK', {
         duration: 10000,
         panelClass: ['mat-accent'],
         horizontalPosition: 'right',
       });
-      console.log(response.body);
-      this.groupsList$ = of(response.body);
+      this.store.dispatch(updateGroupsList({ groups: response.body.Items }));
     }
   }
 
