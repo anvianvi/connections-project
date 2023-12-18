@@ -40,6 +40,7 @@ export interface GetGroupListResponse {
   status: number;
   Count: number;
   Items: GroupItem[];
+  error?: ErrorResponse;
 }
 
 export interface GroupItem {
@@ -47,4 +48,8 @@ export interface GroupItem {
   name: { S: string };
   createdAt: { S: string };
   createdBy: { S: string };
+}
+export interface PostGropeResponse {
+  status: number;
+  groupID: string;
 }

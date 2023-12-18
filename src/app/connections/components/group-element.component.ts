@@ -6,7 +6,7 @@ import { GroupItem } from 'src/app/shared/interfaces/interfaces';
   selector: 'app-group-card',
   template: `<div
     class="group-card-container"
-    [ngStyle]="{ 'background-color': isMygroupe ? '#DCBFFF' : '#F1EAFF' }"
+    [ngStyle]="{ background: isMygroupe ? '#DCBFFF' : '#F1EAFF' }"
   >
     <div class="group-name" (click)="openGroupe(group.id.S)">
       {{ group.name.S }}
@@ -50,7 +50,7 @@ export class GrupCardComponent {
   constructor(private router: Router) {}
 
   ngOnInit() {
-    if (this.currentuser === this.group.id.S) {
+    if (this.currentuser === this.group.createdBy.S) {
       this.isMygroupe = true;
     }
   }

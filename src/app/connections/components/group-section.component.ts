@@ -4,28 +4,38 @@ import { GetGroupListResponse } from 'src/app/shared/interfaces/interfaces';
 import { HttpResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, of } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateGroupModalComponent } from './create-groupe-modal.component';
 
 @Component({
   selector: 'app-group-section',
   template: `
     <div class="group">
-      <div>
-        <button (click)="updateList('groupList')" [disabled]="isButtonDisabled">
-          Update
+      <div class="goup-list-header">
+        <h3>List of groups</h3>
+        <button mat-icon-button (click)="createNewGrope()">
+          <mat-icon>add</mat-icon>
         </button>
+        <button
+          mat-icon-button
+          (click)="updateList('groupList')"
+          [disabled]="isButtonDisabled"
+        >
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+      <div class="counter-container">
         <span *ngIf="counter > 0">
           {{ counter }} seconds until next update
         </span>
-        <button>create(tbd)</button>
       </div>
-      <h3>List of groups</h3>
-    </div>
-    <div *ngIf="groupsList$ | async as groupsList">
-      <app-group-card
-        *ngFor="let group of groupsList.Items"
-        [group]="group"
-        [currentuser]="currentuser"
-      ></app-group-card>
+      <div *ngIf="groupsList$ | async as groupsList">
+        <app-group-card
+          *ngFor="let group of groupsList.Items"
+          [group]="group"
+          [currentuser]="currentuser"
+        ></app-group-card>
+      </div>
     </div>
   `,
   styles: [
@@ -37,6 +47,23 @@ import { Observable, of } from 'rxjs';
         background: pink;
         min-width: 200px;
         min-height: 200px;
+      }
+      .counter-container {
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .goup-list-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        h3 {
+          margin: 0;
+          font-weight: 500;
+          font-size: 22px;
+        }
       }
     `,
   ],
@@ -50,7 +77,8 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
 
   constructor(
     private groupService: GroupService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -117,13 +145,24 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
     }
   }
 
-  private handleGroupListError(error: any): void {
-    this.snackBar.open(`Oops, something went wrong: ${error.message}`, 'OK', {
-      duration: 5000,
-      panelClass: ['mat-error'],
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-    });
+  private handleGroupListError(error: { error: { message: string } }): void {
+    this.snackBar.open(
+      `Oops, something went wrong: ${error.error.message}`,
+      'OK',
+      {
+        duration: 5000,
+        panelClass: ['mat-error'],
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      }
+    );
     this.isButtonDisabled = false;
+  }
+
+  createNewGrope() {
+    const dialogRef = this.dialog.open(CreateGroupModalComponent, {
+      width: '500px',
+      height: '150px',
+    });
   }
 }
