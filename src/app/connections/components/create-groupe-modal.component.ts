@@ -6,6 +6,9 @@ import { HttpResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 import { PostGropeResponse } from 'src/app/shared/interfaces/interfaces';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { addCustomGroup } from 'src/app/state/actions/group.actions';
+import { AppState } from 'src/app/state/state.model';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-create-group-modal',
@@ -59,7 +62,8 @@ export class CreateGroupModalComponent implements OnInit {
     private dialogRef: MatDialogRef<CreateGroupModalComponent>,
     private fb: FormBuilder,
     private groupService: GroupService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private store: Store<AppState>
   ) {
     this.groupForm = this.fb.group({
       groupName: [
@@ -96,10 +100,13 @@ export class CreateGroupModalComponent implements OnInit {
   ): void {
     if (response.status === 201) {
       const newGroup = {
-        createdBy: localStorage.getItem('uid'),
-        name: this.groupForm.value.groupName,
-        id: response.body?.groupID,
+        id: { S: response.body?.groupID || '' },
+        name: { S: this.groupForm.value.groupName },
+        createdBy: { S: localStorage.getItem('uid') || '' },
+        createdAt: { S: Date.now().toString() },
       };
+
+      this.store.dispatch(addCustomGroup({ group: newGroup }));
 
       this.snackBar.open('Groupe Created', 'OK', {
         duration: 10000,

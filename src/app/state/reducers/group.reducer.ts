@@ -15,7 +15,13 @@ export const groupReducer = createReducer(
   on(GroupActions.updateGroupsList, (state, { groups }) => {
     return {
       ...state,
-      groups: groups, // Fix the property name here
+      groups: groups,
+    };
+  }),
+  on(GroupActions.addCustomGroup, (state, { group }) => {
+    return {
+      ...state,
+      groups: [group, ...state.groups],
     };
   })
 );

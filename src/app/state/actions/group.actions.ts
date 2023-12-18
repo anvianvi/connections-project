@@ -5,3 +5,8 @@ export const updateGroupsList = createAction(
   '[Groups] Update Groups List',
   props<{ groups: GroupItem[] }>()
 );
+
+export const addCustomGroup = createAction(
+  '[Groups] Add Group To List',
+  props<{ group: GroupItem }>()
+);

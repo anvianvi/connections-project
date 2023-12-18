@@ -145,10 +145,11 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
   ): void {
     if (response.status === 200 && response.body) {
       this.snackBar.open('GroupListReceived', 'OK', {
-        duration: 10000,
+        duration: 5000,
         panelClass: ['mat-accent'],
         horizontalPosition: 'right',
       });
+      console.log(response.body.Items);
       this.store.dispatch(updateGroupsList({ groups: response.body.Items }));
     }
   }
