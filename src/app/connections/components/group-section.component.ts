@@ -21,9 +21,11 @@ import { Observable, of } from 'rxjs';
       <h3>List of groups</h3>
     </div>
     <div *ngIf="groupsList$ | async as groupsList">
-      <p *ngFor="let group of groupsList.Items">
-        {{ group.name.S }}
-      </p>
+      <app-group-card
+        *ngFor="let group of groupsList.Items"
+        [group]="group"
+        [currentuser]="currentuser"
+      ></app-group-card>
     </div>
   `,
   styles: [
@@ -44,6 +46,7 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
   timer: ReturnType<typeof setTimeout> | undefined;
   isButtonDisabled = false;
   groupsList$: Observable<GetGroupListResponse | null> = of(null);
+  currentuser!: string;
 
   constructor(
     private groupService: GroupService,
@@ -53,6 +56,7 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.startCountdown('groupList');
     this.fetchGroupList();
+    this.currentuser = localStorage.getItem('uid') || '1';
   }
 
   ngOnDestroy(): void {}
