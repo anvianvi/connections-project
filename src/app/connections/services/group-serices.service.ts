@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import {
   GetGroupListResponse,
   PostGropeResponse,
+  ServerResponse,
 } from 'src/app/shared/interfaces/interfaces';
 import { API_URL } from 'src/app/shared/variables/api';
 
@@ -29,4 +30,15 @@ export class GroupService {
       }
     );
   }
+
+  deleteGroup(groupId: string): Observable<HttpResponse<ServerResponse>> {
+    return this.http.delete<HttpResponse<ServerResponse>>(
+      `${API_URL}/groups/delete?groupID=${groupId}`
+    );
+  }
+  // logout(): Observable<ServerResponse> {
+  //   return this.http.delete<ServerResponse>(`${API_URL}/logout`, {
+  //     observe: 'response',
+  //   });
+  // }
 }

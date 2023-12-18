@@ -1,6 +1,17 @@
+import { HttpResponse } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { GroupItem } from 'src/app/shared/interfaces/interfaces';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confiration-dialog.component';
+import {
+  GroupItem,
+  ServerResponse,
+} from 'src/app/shared/interfaces/interfaces';
+import { GroupService } from '../services/group-serices.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/state/state.model';
+import { remuveGroupe } from 'src/app/state/actions/group.actions';
 
 @Component({
   selector: 'app-group-card',
@@ -14,7 +25,7 @@ import { GroupItem } from 'src/app/shared/interfaces/interfaces';
     <button
       mat-icon-button
       *ngIf="isMygroupe"
-      (click)="deliteGrope(group.id.S)"
+      (click)="openConfirmationDialog(group.id.S)"
     >
       <mat-icon>delete</mat-icon>
     </button>
@@ -47,7 +58,13 @@ import { GroupItem } from 'src/app/shared/interfaces/interfaces';
 export class GrupCardComponent {
   isMygroupe = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private store: Store<AppState>,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog,
+    private groupService: GroupService
+  ) {}
 
   ngOnInit() {
     if (this.currentuser === this.group.createdBy.S) {
@@ -58,9 +75,48 @@ export class GrupCardComponent {
   @Input() group!: GroupItem;
   @Input() currentuser!: string;
 
-  deliteGrope(id: string) {
-    console.log(id);
-    console.log('implement delite groupe');
+  openConfirmationDialog(groupeId: string): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '250px',
+      data: {
+        title: 'Confirmation',
+        content: 'Are you sure you want to delete this group?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'confirm') {
+        this.deleteSelectedGroup(groupeId);
+      }
+    });
+  }
+
+  deleteSelectedGroup(id: string) {
+    this.groupService.deleteGroup(id).subscribe(
+      (response: HttpResponse<ServerResponse>) => {
+        if (response && response.status === 200) {
+          this.store.dispatch(remuveGroupe({ groupeId: id }));
+
+          this.snackBar.open('Group deleted successfully', 'OK', {
+            duration: 7000,
+            panelClass: ['mat-accent'],
+            horizontalPosition: 'right',
+          });
+        }
+      },
+      (error) => {
+        this.snackBar.open(
+          `Oops, something went wrong: ${error.error.message}`,
+          'OK',
+          {
+            duration: 15000,
+            panelClass: ['mat-error'],
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          }
+        );
+      }
+    );
   }
 
   openGroupe(groupId: string) {

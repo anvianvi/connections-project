@@ -13,8 +13,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { RouterModule } from '@angular/router';
+import { ConfirmationDialogComponent } from './components/confiration-dialog.component';
 
 @NgModule({
+  declarations: [ConfirmationDialogComponent],
   imports: [
     MatFormFieldModule,
     MatDatepickerModule,
@@ -48,6 +50,7 @@ import { RouterModule } from '@angular/router';
     RouterModule,
     MatPaginatorModule,
     MatDialogModule,
+    ConfirmationDialogComponent,
   ],
 })
 export class SharedModule {}

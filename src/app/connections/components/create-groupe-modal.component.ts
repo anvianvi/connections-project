@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { GroupService } from '../services/group-serices.service';
 import { HttpResponse } from '@angular/common/http';
-import { of } from 'rxjs';
 import { PostGropeResponse } from 'src/app/shared/interfaces/interfaces';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { addCustomGroup } from 'src/app/state/actions/group.actions';
@@ -82,7 +81,6 @@ export class CreateGroupModalComponent implements OnInit {
   onCreate(): void {
     if (this.groupForm.valid) {
       this.postNewGrope(this.groupForm.value.groupName);
-      console.log('Group Name:', this.groupForm.value.groupName);
       this.dialogRef.close();
     }
   }
@@ -113,14 +111,10 @@ export class CreateGroupModalComponent implements OnInit {
         panelClass: ['mat-accent'],
         horizontalPosition: 'right',
       });
-      console.log(response.body?.groupID);
-      console.log(response.body);
     }
   }
 
   private handleGroupListError(error: { error: { message: string } }): void {
-    console.log(error);
-    console.log(error.error.message);
     this.snackBar.open(
       `Oops, something went wrong: ${error.error.message}`,
       'OK',

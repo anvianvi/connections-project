@@ -10,3 +10,8 @@ export const addCustomGroup = createAction(
   '[Groups] Add Group To List',
   props<{ group: GroupItem }>()
 );
+
+export const remuveGroupe = createAction(
+  '[Groups] Delete Group',
+  props<{ groupeId: string }>()
+);
