@@ -81,7 +81,6 @@ export class CreateGroupModalComponent implements OnInit {
   onCreate(): void {
     if (this.groupForm.valid) {
       this.postNewGrope(this.groupForm.value.groupName);
-      this.dialogRef.close();
     }
   }
 
@@ -105,6 +104,8 @@ export class CreateGroupModalComponent implements OnInit {
       };
 
       this.store.dispatch(addCustomGroup({ group: newGroup }));
+
+      this.dialogRef.close();
 
       this.snackBar.open('Groupe Created', 'OK', {
         duration: 10000,

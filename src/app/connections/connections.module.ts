@@ -6,6 +6,7 @@ import { MainPageComponent } from './components/main.component';
 import { GroupSectionComponent } from './components/group-section.component';
 import { GrupCardComponent } from './components/group-element.component';
 import { CreateGroupModalComponent } from './components/create-groupe-modal.component';
+import { UserSectionComponent } from './components/user-section.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { CreateGroupModalComponent } from './components/create-groupe-modal.comp
     GroupSectionComponent,
     GrupCardComponent,
     CreateGroupModalComponent,
+    UserSectionComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [MainPageComponent],

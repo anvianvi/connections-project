@@ -37,6 +37,9 @@ import { remuveGroupe } from 'src/app/state/actions/group.actions';
         justify-content: space-between;
         max-width: 360px;
         align-items: center;
+        border-radius: 5px;
+        border: 1px solid rgb(198 175 243);
+        margin-bottom: 5px;
 
         .group-name {
           display: flex;
@@ -94,6 +97,7 @@ export class GrupCardComponent {
   deleteSelectedGroup(id: string) {
     this.groupService.deleteGroup(id).subscribe(
       (response: HttpResponse<ServerResponse>) => {
+        console.log(response);
         if (response && response.status === 200) {
           this.store.dispatch(remuveGroupe({ groupeId: id }));
 
@@ -121,7 +125,7 @@ export class GrupCardComponent {
 
   openGroupe(groupId: string) {
     console.log(groupId);
-    // this.router.navigate(['/group', groupId]);
     console.log('implement open groupe');
+    this.router.navigate(['/group', groupId]);
   }
 }

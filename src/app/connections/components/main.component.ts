@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-main',
   template: `
     <div class="main-column"><app-group-section></app-group-section></div>
-    <div class="main-column right"></div>
+    <div class="main-column"></div>
   `,
   styles: [
     `
@@ -14,17 +14,12 @@ import { Component, OnInit } from '@angular/core';
         align-items: center;
         flex-wrap: flex-wrap;
         height: 100%;
-        background: lightcoral;
         padding-top: 20px;
       }
 
       .main-column {
-        background: lightblue;
         min-width: 360px;
         height: 100%;
-      }
-      .right {
-        background: lightgreen;
       }
     `,
   ],

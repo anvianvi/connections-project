@@ -17,7 +17,7 @@ import { updateGroupsList } from 'src/app/state/actions/group.actions';
 @Component({
   selector: 'app-group-section',
   template: `
-    <div class="group">
+    <div>
       <div class="goup-list-header">
         <h3>List of groups</h3>
         <button mat-icon-button (click)="createNewGrope()">
@@ -47,14 +47,6 @@ import { updateGroupsList } from 'src/app/state/actions/group.actions';
   `,
   styles: [
     `
-      ::ng-deep app-group-section {
-      }
-
-      .group {
-        background: pink;
-        min-width: 200px;
-        min-height: 200px;
-      }
       .counter-container {
         height: 30px;
         display: flex;
