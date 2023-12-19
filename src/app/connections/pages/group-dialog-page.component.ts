@@ -14,6 +14,17 @@ import { HttpResponse } from '@angular/common/http';
   template: `
     <div class="group-dialog-header">
       <a href="#" (click)="goBack($event)"> <mat-icon>arrow_back</mat-icon> </a>
+      <button
+        mat-icon-button
+        (click)="updateList('group_chat_' + groupId)"
+        [disabled]="isButtonDisabled"
+      >
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+
+    <div class="counter-container">
+      <span *ngIf="counter > 0"> {{ counter }} seconds until next update </span>
     </div>
     <div>
       group dialog page worck
@@ -27,16 +38,18 @@ import { HttpResponse } from '@angular/common/http';
   styles: [
     `
       ::ng-deep app-group-dialog {
-        background: coral;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        height: 100%;
         padding-top: 20px;
       }
+      .counter-container {
+        height: 30px;
+      }
+
       .group-dialog-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding-block: 20px;
+
         a {
           color: black;
           text-decoration: none;
@@ -46,10 +59,13 @@ import { HttpResponse } from '@angular/common/http';
   ],
 })
 export class GroupDialogPageComponent implements OnInit {
+  counter: number = 0;
+  timer: ReturnType<typeof setTimeout> | undefined;
+  isButtonDisabled = false;
   private detailedSub = new Subject<void>();
-  messages: MessageItem[] | undefined;
-
   groupId!: string;
+
+  messages: MessageItem[] | undefined;
 
   constructor(
     private location: Location,
@@ -61,6 +77,7 @@ export class GroupDialogPageComponent implements OnInit {
   ngOnInit() {
     this.listenToRouteParams();
     this.fetchGroupMessages();
+    this.startCountdown('group_chat_' + this.groupId);
   }
 
   private listenToRouteParams() {
@@ -91,5 +108,43 @@ export class GroupDialogPageComponent implements OnInit {
         }
       }
     );
+  }
+
+  updateList(identifier: string): void {
+    this.fetchGroupMessages();
+    this.isButtonDisabled = true;
+    localStorage.setItem(
+      `lastClickTimestamp_${identifier}`,
+      Date.now().toString()
+    );
+    this.startCountdown(identifier);
+    console.log(identifier);
+  }
+
+  startCountdown(identifier: string): void {
+    console.log(identifier);
+
+    this.isButtonDisabled = true;
+    let secondsRemaining = Math.floor(
+      (Date.now() -
+        Number(localStorage.getItem(`lastClickTimestamp_${identifier}`))) /
+        1000
+    );
+    console.log();
+    this.counter = 60 - secondsRemaining;
+    if (this.counter < 1) {
+      this.isButtonDisabled = false;
+    }
+    this.timer = setInterval(() => {
+      this.counter -= 1;
+
+      if (this.counter < 1) {
+        if (this.timer) {
+          clearInterval(this.timer);
+        }
+        this.counter = 0;
+        this.isButtonDisabled = false;
+      }
+    }, 1000);
   }
 }
