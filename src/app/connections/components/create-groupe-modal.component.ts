@@ -29,7 +29,7 @@ import { Store } from '@ngrx/store';
         <button
           mat-button
           color="primary"
-          [disabled]="!groupForm.valid"
+          [disabled]="!groupForm.valid || isFetchButtonDisabled"
           (click)="onCreate()"
         >
           Create
@@ -56,6 +56,7 @@ import { Store } from '@ngrx/store';
 })
 export class CreateGroupModalComponent implements OnInit {
   groupForm: FormGroup;
+  isFetchButtonDisabled = false;
 
   constructor(
     private dialogRef: MatDialogRef<CreateGroupModalComponent>,
@@ -80,15 +81,21 @@ export class CreateGroupModalComponent implements OnInit {
 
   onCreate(): void {
     if (this.groupForm.valid) {
+      this.isFetchButtonDisabled = true;
       this.postNewGrope(this.groupForm.value.groupName);
     }
   }
 
   postNewGrope(name: string) {
     this.groupService.createNewGroupe(name).subscribe(
-      (response: HttpResponse<PostGropeResponse>) =>
-        this.handleCreateGroupSuccess(response),
-      (error) => this.handleGroupListError(error)
+      (response: HttpResponse<PostGropeResponse>) => {
+        this.handleCreateGroupSuccess(response), this.dialogRef.close();
+        this.isFetchButtonDisabled = false;
+      },
+      (error) => {
+        this.handleGroupListError(error);
+        this.isFetchButtonDisabled = false;
+      }
     );
   }
 
@@ -104,8 +111,6 @@ export class CreateGroupModalComponent implements OnInit {
       };
 
       this.store.dispatch(addCustomGroup({ group: newGroup }));
-
-      this.dialogRef.close();
 
       this.snackBar.open('Groupe Created', 'OK', {
         duration: 10000,
