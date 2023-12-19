@@ -128,7 +128,6 @@ export class GroupSectionComponent implements OnInit {
   }
 
   fetchGroupList() {
-    console.log('it run fetch');
     this.groupService.getGroupList().subscribe(
       (response: HttpResponse<GetGroupListResponse>) =>
         this.handleGroupListSuccess(response),
@@ -145,7 +144,6 @@ export class GroupSectionComponent implements OnInit {
         panelClass: ['mat-accent'],
         horizontalPosition: 'right',
       });
-      console.log(response.body.Items);
       this.store.dispatch(updateGroupsList({ groups: response.body.Items }));
     }
   }

@@ -79,9 +79,3 @@ export interface MyCompanionsItem {
   companionID: { S: string };
   userName: { S: string };
 }
-
-// export interface MyCompanionsItem {
-//   convercationId?: { S: string }; if there is conversation with companionID == userItem.uid then convercationId =ConversationsItem.id
-//   companionID: { S: string }; = userItem.uid
-//   userName: { S: string }; = userItem.name
-// }

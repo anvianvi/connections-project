@@ -32,6 +32,12 @@ export const userReducer = createReducer(
       conversations: conversations,
     };
   }),
+  on(UserActions.addNewConversation, (state, { conversation }) => {
+    return {
+      ...state,
+      conversations: [conversation, ...state.conversations],
+    };
+  }),
   on(UserActions.updateCompanionsList, (state, { companions }) => {
     return {
       ...state,

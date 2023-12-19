@@ -11,6 +11,7 @@ import {
 } from 'src/app/shared/interfaces/interfaces';
 import { API_URL } from 'src/app/shared/variables/api';
 import {
+  addNewConversation,
   updateConversationsList,
   updateUsersList,
 } from 'src/app/state/actions/user.actions';
@@ -47,18 +48,32 @@ export class UserApiService {
     companionID: string
   ): Observable<HttpResponse<CreateConversationResponse>> {
     return this.http.post<CreateConversationResponse>(
-      `${API_URL}/groups/create`,
-      { companionID: companionID },
+      `${API_URL}/conversations/create`,
+      { companion: companionID },
       {
         observe: 'response',
       }
     );
   }
 
-  deleteGroup(groupId: string): Observable<HttpResponse<ServerResponse>> {
-    return this.http.delete<HttpResponse<ServerResponse>>(
-      `${API_URL}/groups/delete?groupID=${groupId}`
-    );
+  handleCreateConversationSuccess(
+    conmpanionID: string,
+    response: HttpResponse<CreateConversationResponse>
+  ): void {
+    if (response.status === 201 && response.body) {
+      this.snackBar.open('Conversation sucsesfuly created', 'OK', {
+        duration: 5000,
+        panelClass: ['mat-accent'],
+        horizontalPosition: 'right',
+      });
+      const newConversation = {
+        id: { S: response.body.conversationID },
+        companionID: { S: conmpanionID },
+      };
+      this.store.dispatch(
+        addNewConversation({ conversation: newConversation })
+      );
+    }
   }
 
   handleGetUsersSuccess(response: HttpResponse<GetUserListResponse>): void {

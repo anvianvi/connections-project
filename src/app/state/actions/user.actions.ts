@@ -1,5 +1,9 @@
 import { createAction, props } from '@ngrx/store';
-import { ConversationsItem, MyCompanionsItem, UserItem } from 'src/app/shared/interfaces/interfaces';
+import {
+  ConversationsItem,
+  MyCompanionsItem,
+  UserItem,
+} from 'src/app/shared/interfaces/interfaces';
 
 export const updateUsersList = createAction(
   '[Users] Update Users List',
@@ -11,8 +15,12 @@ export const updateConversationsList = createAction(
   props<{ conversations: ConversationsItem[] }>()
 );
 
+export const addNewConversation = createAction(
+  '[Conversations] Add Conversation To List',
+  props<{ conversation: ConversationsItem }>()
+);
+
 export const updateCompanionsList = createAction(
   '[Companions] Update Companions List',
   props<{ companions: MyCompanionsItem[] }>()
 );
-

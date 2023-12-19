@@ -1,13 +1,18 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { MyCompanionsItem } from 'src/app/shared/interfaces/interfaces';
+import {
+  CreateConversationResponse,
+  MyCompanionsItem,
+} from 'src/app/shared/interfaces/interfaces';
+import { UserApiService } from '../services/user-api.services';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-conversation-card',
   template: `<div
     class="conversation-card-container"
-    [ngStyle]="{ background: isExistingConversation ? '#FEFCF3' : '#F0DBDB' }"
+    [ngStyle]="{ background: !isExistingConversation ? '#FEFCF3' : '#F0DBDB' }"
   >
     <div
       class="conversation-name"
@@ -46,7 +51,13 @@ import { MyCompanionsItem } from 'src/app/shared/interfaces/interfaces';
 export class ConversationCardComponent {
   isExistingConversation = false;
 
-  constructor(public dialog: MatDialog, private router: Router) {}
+  constructor(
+    private userApiServices: UserApiService,
+    public dialog: MatDialog,
+    private router: Router
+  ) {}
+
+  @Input() conversation!: MyCompanionsItem;
 
   ngOnInit() {
     if (this.conversation.conversationId?.S != null) {
@@ -54,10 +65,23 @@ export class ConversationCardComponent {
     }
   }
 
-  @Input() conversation!: MyCompanionsItem;
-
   openConversation(companionID: string) {
-    
-    this.router.navigate(['/conversation', companionID]);
+    if (this.isExistingConversation === false) {
+      this.userApiServices.createConversation(companionID).subscribe(
+        (response: HttpResponse<CreateConversationResponse>) => {
+          this.userApiServices.handleCreateConversationSuccess(
+            companionID,
+            response
+          );
+          this.router.navigate(['/conversation', companionID]);
+        },
+        (error) => {
+          this.userApiServices.handleResponseError(error);
+        }
+      );
+    } else {
+      console.log('here shoud be method to open existing conversation');
+      this.router.navigate(['/conversation', companionID]);
+    }
   }
 }
