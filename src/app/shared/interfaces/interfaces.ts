@@ -41,10 +41,12 @@ export interface GroupItem {
   createdAt: { S: string };
   createdBy: { S: string };
 }
+
 export interface PostGropeResponse {
   status: number;
   groupID: string;
 }
+
 export interface GetUserListResponse {
   status: number;
   Count: number;
@@ -78,4 +80,15 @@ export interface MyCompanionsItem {
   conversationId?: { S: string };
   companionID: { S: string };
   userName: { S: string };
+}
+
+export interface GetGroupMessagesResponse {
+  Count: number;
+  Items: MessageItem[];
+}
+
+export interface MessageItem {
+  authorID: { S: string };
+  message: { S: string };
+  createdAt: { S: string };
 }

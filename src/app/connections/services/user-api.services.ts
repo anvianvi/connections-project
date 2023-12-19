@@ -6,12 +6,14 @@ import { Observable } from 'rxjs';
 import {
   CreateConversationResponse,
   GetConversationsListResponse,
+  GetGroupMessagesResponse,
   GetUserListResponse,
   ServerResponse,
 } from 'src/app/shared/interfaces/interfaces';
 import { API_URL } from 'src/app/shared/variables/api';
 import {
   addNewConversation,
+  remuveConversation,
   updateConversationsList,
   updateUsersList,
 } from 'src/app/state/actions/user.actions';
@@ -111,6 +113,58 @@ export class UserApiService {
         panelClass: ['mat-error'],
         horizontalPosition: 'center',
         verticalPosition: 'top',
+      }
+    );
+  }
+
+  getUserChatMessagesRequest(
+    conversationID: string,
+    since?: number
+  ): Observable<HttpResponse<GetGroupMessagesResponse>> {
+    return this.http.get<GetGroupMessagesResponse>(
+      `${API_URL}/conversations/read?conversationID=${conversationID}&since=${
+        since || ''
+      }`,
+      {
+        observe: 'response',
+      }
+    );
+  }
+
+  handleGetUserChatMessagesSuccess(
+    response: HttpResponse<GetGroupMessagesResponse>
+  ): void {
+    if (response.status === 200 && response.body) {
+      this.snackBar.open('Messages get successfully', 'OK', {
+        duration: 5000,
+        panelClass: ['mat-accent'],
+        horizontalPosition: 'right',
+      });
+    }
+  }
+
+  deleteConversation(
+    conversationID: string
+  ): Observable<HttpResponse<ServerResponse>> {
+    return this.http.delete<HttpResponse<ServerResponse>>(
+      `${API_URL}/conversations/delete?conversationID=${conversationID}`,
+      {
+        observe: 'response',
+      }
+    );
+  }
+  handleDeleteSelectedConversation(id: string) {
+    this.deleteConversation(id).subscribe(
+      (response: HttpResponse<ServerResponse>) => {
+        if (response.status === 200) {
+          this.store.dispatch(remuveConversation({ conversationID: id }));
+
+          this.snackBar.open('Conversation deleted successfully', 'OK', {
+            duration: 7000,
+            panelClass: ['mat-accent'],
+            horizontalPosition: 'right',
+          });
+        }
       }
     );
   }

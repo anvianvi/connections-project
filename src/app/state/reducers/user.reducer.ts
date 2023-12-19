@@ -38,6 +38,10 @@ export const userReducer = createReducer(
       conversations: [conversation, ...state.conversations],
     };
   }),
+  on(UserActions.remuveConversation, (state, { conversationID }) => ({
+    ...state,
+    conversations: state.conversations.filter((conversation) => conversation.id.S !== conversationID),
+  })),
   on(UserActions.updateCompanionsList, (state, { companions }) => {
     return {
       ...state,

@@ -80,8 +80,10 @@ export class ConversationCardComponent {
         }
       );
     } else {
-      console.log('here shoud be method to open existing conversation');
-      this.router.navigate(['/conversation', companionID]);
+      this.router.navigate([
+        '/conversation',
+        this.conversation.conversationId?.S,
+      ]);
     }
   }
 }

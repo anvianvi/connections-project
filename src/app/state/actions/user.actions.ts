@@ -20,6 +20,12 @@ export const addNewConversation = createAction(
   props<{ conversation: ConversationsItem }>()
 );
 
+export const remuveConversation = createAction(
+  '[Conversation] Delete Conversation',
+  props<{ conversationID: string }>()
+);
+
+
 export const updateCompanionsList = createAction(
   '[Companions] Update Companions List',
   props<{ companions: MyCompanionsItem[] }>()

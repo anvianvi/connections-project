@@ -10,3 +10,8 @@ export const selectGroups = createSelector(
   selectGroupState,
   (state) => state.groups
 );
+
+export const selectGroupById = (id: string) =>
+  createSelector(selectGroups, (groups) =>
+    groups.find((group) => group.id.S === id)
+  );
