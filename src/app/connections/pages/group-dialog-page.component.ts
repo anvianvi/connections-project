@@ -2,17 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { GroupService } from '../services/group-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import {
   GetGroupMessagesResponse,
   GroupItem,
   MessageItem,
+  UserItem,
 } from 'src/app/shared/interfaces/interfaces';
 import { HttpResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confiration-dialog.component';
 
 import { DateService } from 'src/app/core/services/data.service';
+import { AppState } from 'src/app/state/state.model';
+import { Store, select } from '@ngrx/store';
+import { selectUserById } from 'src/app/state/selectors/users.selectors';
 
 @Component({
   selector: 'app-group-dialog',
@@ -40,11 +44,18 @@ import { DateService } from 'src/app/core/services/data.service';
     </div>
     <div>
       <div class="mesages-wraper" *ngFor="let message of messages">
-        <div class="message-container">
+        <div
+          class="message-container"
+          [ngStyle]="{
+            'margin-left': currentuser === message.authorID.S ? 'auto' : '0'
+          }"
+        >
           <div class="message-date">
             {{ dateService.formatUnixTimestamp(message.createdAt.S) }}
           </div>
-          <div class="mesage-author">{{ message.authorID.S }}:</div>
+          <div class="mesage-author">
+            {{ getUserNameByID(message.authorID.S) | async }}:
+          </div>
           <div class="message-text">{{ message.message.S }}</div>
         </div>
       </div>
@@ -101,6 +112,7 @@ export class GroupDialogPageComponent implements OnInit {
   groupId!: string;
   isMygroupe = false;
   currenGroup: GroupItem | undefined;
+  currentuser!: string;
 
   messages: MessageItem[] | undefined;
 
@@ -110,8 +122,11 @@ export class GroupDialogPageComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
-    public dateService: DateService
-  ) {}
+    public dateService: DateService,
+    private store: Store<AppState>
+  ) {
+    this.currentuser = localStorage.getItem('uid') || '1';
+  }
 
   ngOnInit() {
     this.listenToRouteParams();
@@ -154,9 +169,15 @@ export class GroupDialogPageComponent implements OnInit {
       }
     );
   }
-  // getUserNameByID(id){
 
-  // }
+  getUserNameByID(id: string): Observable<string> {
+    return this.store.pipe(
+      select(selectUserById(id)),
+      map((user: UserItem | undefined) =>
+        user && user.name ? user.name.S : 'User not exists in db'
+      )
+    );
+  }
 
   openConfirmationDialog(groupeId: string): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
