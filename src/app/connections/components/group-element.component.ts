@@ -123,8 +123,6 @@ export class GrupCardComponent {
   }
 
   openGroupe(groupId: string) {
-    console.log(groupId);
-    console.log('implement open groupe');
     this.router.navigate(['/group', groupId]);
   }
 }

@@ -3,9 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { RegistrationComponent } from './auth/components/register/registration.component';
 import { NotFoundComponent } from './core/pages/404-page.component';
 import { LoginComponent } from './auth/components/login/login.component';
-import { MainPageComponent } from './connections/components/main.component';
+import { MainPageComponent } from './connections/pages/main-page.component';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { ProfilePageComponent } from './core/pages/profile-page.component';
+import { GroupDialogPageComponent } from './connections/pages/group-dialog-page.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,15 @@ const routes: Routes = [
         (m) => m.ConnectionsModule
       ),
     component: MainPageComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'group/:groupID',
+    loadChildren: () =>
+      import('./connections/connections.module').then(
+        (m) => m.ConnectionsModule
+      ),
+    component: GroupDialogPageComponent,
     canActivate: [AuthGuard],
   },
   {
