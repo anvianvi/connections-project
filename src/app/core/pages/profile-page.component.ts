@@ -15,12 +15,7 @@ import { ServerResponse } from 'src/app/shared/interfaces/interfaces';
       <p><strong>Creation Time:</strong> {{ profileCreationTime }}</p>
       <div class="user-name-container">
         <strong>User Name: </strong>
-        <button
-          mat-icon-button
-          class="edit-name-btn"
-          *ngIf="!isEditing"
-          (click)="startEditing()"
-        >
+        <button mat-icon-button *ngIf="!isEditing" (click)="startEditing()">
           <mat-icon>edit</mat-icon>
         </button>
         <span *ngIf="!isEditing">{{ userName }}</span>
@@ -44,8 +39,6 @@ import { ServerResponse } from 'src/app/shared/interfaces/interfaces';
         height: 50px;
         align-items: center;
 
-        .edit-name-btn {
-        }
         .edit-name-block {
           margin-left: 50px;
           display: flex;

@@ -80,16 +80,12 @@ export class LoginComponent implements OnInit, OnDestroy {
           (error) => {
             this.errorType = error.error.type;
 
-            this.snackBar.open(
-              `Registration failed! ${error.error.message}`,
-              'OK',
-              {
-                duration: 5000,
-                panelClass: ['mat-error'],
-                horizontalPosition: 'center',
-                verticalPosition: 'top',
-              }
-            );
+            this.snackBar.open(`Login failed! ${error.error.message}`, 'OK', {
+              duration: 5000,
+              panelClass: ['mat-error'],
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
             this.isSubmitting = false;
           }
         );

@@ -22,16 +22,60 @@ export interface LoginResponse {
 }
 
 export interface GetProfileResponse {
-  email: {
-    S: string;
-  };
-  name: {
-    S: string;
-  };
-  uid: {
-    S: string;
-  };
-  createdAt: {
-    S: string;
-  };
+  email: { S: string };
+  name: { S: string };
+  uid: { S: string };
+  createdAt: { S: string };
+}
+
+export interface GetGroupListResponse {
+  status: number;
+  Count: number;
+  Items: GroupItem[];
+  error?: ErrorResponse;
+}
+
+export interface GroupItem {
+  id: { S: string };
+  name: { S: string };
+  createdAt: { S: string };
+  createdBy: { S: string };
+}
+export interface PostGropeResponse {
+  status: number;
+  groupID: string;
+}
+export interface GetUserListResponse {
+  status: number;
+  Count: number;
+  Items: UserItem[];
+  error?: ErrorResponse;
+}
+
+export interface GetConversationsListResponse {
+  status: number;
+  Count: number;
+  Items: ConversationsItem[];
+  error?: ErrorResponse;
+}
+
+export interface CreateConversationResponse {
+  status: number;
+  conversationID: string;
+}
+
+export interface UserItem {
+  name: { S: string };
+  uid: { S: string };
+}
+
+export interface ConversationsItem {
+  id: { S: string };
+  companionID: { S: string };
+}
+
+export interface MyCompanionsItem {
+  conversationId?: { S: string };
+  companionID: { S: string };
+  userName: { S: string };
 }
