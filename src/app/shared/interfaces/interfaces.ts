@@ -22,18 +22,10 @@ export interface LoginResponse {
 }
 
 export interface GetProfileResponse {
-  email: {
-    S: string;
-  };
-  name: {
-    S: string;
-  };
-  uid: {
-    S: string;
-  };
-  createdAt: {
-    S: string;
-  };
+  email: { S: string };
+  name: { S: string };
+  uid: { S: string };
+  createdAt: { S: string };
 }
 
 export interface GetGroupListResponse {
@@ -52,4 +44,29 @@ export interface GroupItem {
 export interface PostGropeResponse {
   status: number;
   groupID: string;
+}
+export interface GetUserListResponse {
+  status: number;
+  Count: number;
+  Items: UserItem[];
+  error?: ErrorResponse;
+}
+export interface UserItem {
+  name: { S: string };
+  uid: { S: string };
+}
+
+export interface GetConversationsListResponse {
+  status: number;
+  Count: number;
+  Items: ConversationsItem[];
+  error?: ErrorResponse;
+}
+export interface ConversationsItem {
+  id: { S: string };
+  companionID: { S: string };
+}
+export interface CreateConversationResponse {
+  status: number;
+  conversationID: string;
 }
