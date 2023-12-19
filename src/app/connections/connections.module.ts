@@ -9,6 +9,7 @@ import { CreateGroupModalComponent } from './components/create-groupe-modal.comp
 import { UserSectionComponent } from './components/user-section.component';
 import { ConversationCardComponent } from './components/conversation-element.component';
 import { GroupDialogPageComponent } from './pages/group-dialog-page.component';
+import { ConversationPageComponent } from './pages/conversation-page.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { GroupDialogPageComponent } from './pages/group-dialog-page.component';
     UserSectionComponent,
     ConversationCardComponent,
     GroupDialogPageComponent,
+    ConversationPageComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [MainPageComponent],

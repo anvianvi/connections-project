@@ -50,7 +50,6 @@ import { remuveGroupe } from 'src/app/state/actions/group.actions';
         }
         .group-name:hover {
           cursor: pointer;
-          text-decoration: dashed;
           text-decoration: underline;
           font-weight: 500;
         }

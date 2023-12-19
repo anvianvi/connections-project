@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { MyCompanionsItem } from 'src/app/shared/interfaces/interfaces';
 
 @Component({
@@ -35,7 +36,6 @@ import { MyCompanionsItem } from 'src/app/shared/interfaces/interfaces';
         }
         .conversation-name:hover {
           cursor: pointer;
-          text-decoration: dashed;
           text-decoration: underline;
           font-weight: 500;
         }
@@ -46,7 +46,7 @@ import { MyCompanionsItem } from 'src/app/shared/interfaces/interfaces';
 export class ConversationCardComponent {
   isExistingConversation = false;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private router: Router) {}
 
   ngOnInit() {
     if (this.conversation.conversationId?.S != null) {
@@ -57,8 +57,7 @@ export class ConversationCardComponent {
   @Input() conversation!: MyCompanionsItem;
 
   openConversation(companionID: string) {
-    console.log(companionID);
-    console.log('implement open groupe');
-    // this.router.navigate(['/group', companionID]);
+    
+    this.router.navigate(['/conversation', companionID]);
   }
 }

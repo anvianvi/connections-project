@@ -66,19 +66,23 @@ export class UserSectionComponent implements OnInit {
   timer: ReturnType<typeof setTimeout> | undefined;
   isButtonDisabled = false;
   myCompanions$!: Observable<MyCompanionsItem[]>;
+  currentuser!: string;
 
   constructor(
     private store: Store<AppState>,
     private userApiServices: UserApiService,
     public dialog: MatDialog
   ) {
-    this.myCompanions$ = this.store.pipe(select(selectMyCompanions));
+    this.currentuser = localStorage.getItem('uid') || '1';
+
+    this.myCompanions$ = this.store.pipe(
+      select(selectMyCompanions(this.currentuser))
+    );
   }
 
   ngOnInit() {
     this.startCountdown('userList');
     this.myCompanions$.pipe().subscribe((companions) => {
-      console.log(companions);
       if (companions.length === 0) {
         this.fetchUserList();
         this.fetchConversationsList();

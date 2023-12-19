@@ -1,18 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 
-
 @Component({
-  selector: 'app-group-dialog',
+  selector: 'app-conversation-page',
   template: `
     <div>
-      group dialog page worck
-      <p>{{ groupId }}</p>
+      conversationpageworck
+      <p>{{ conversation }}</p>
     </div>
   `,
   styles: [
     `
-      ::ng-deep app-group-dialog {
-        background: coral;
+      ::ng-deep app-conversation-page {
+        background: lightblue;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -24,8 +23,8 @@ import { Component, OnInit } from '@angular/core';
     `,
   ],
 })
-export class GroupDialogPageComponent implements OnInit {
-  groupId: string = 'someid';
+export class ConversationPageComponent implements OnInit {
+  conversation: string = 'someidconversation';
 
   constructor() {}
 
