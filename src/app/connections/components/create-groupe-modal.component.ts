@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { GroupService } from '../services/group-serices.service';
+import { GroupService } from '../services/group-api.service';
 import { HttpResponse } from '@angular/common/http';
 import { PostGropeResponse } from 'src/app/shared/interfaces/interfaces';
 import { MatSnackBar } from '@angular/material/snack-bar';

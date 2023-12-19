@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GroupService } from '../services/group-serices.service';
+import { GroupService } from '../services/group-api.service';
 import {
   GetGroupListResponse,
   GroupItem,
@@ -85,18 +85,10 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.startCountdown('groupList');
-    console.log(this.store.pipe(select(selectGroups)));
-
-    //
     this.currentuser = localStorage.getItem('uid') || '1';
-    console.log(this.store.pipe(select(selectGroups)));
     this.groupsList$.pipe().subscribe((groups) => {
-      console.log('here our groups we will check for length');
-
-      console.log(groups);
-
       if (groups.length === 0) {
-        this.fetchGroupList();
+        // this.fetchGroupList();
       }
     });
   }
@@ -138,6 +130,7 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
   }
 
   fetchGroupList() {
+    console.log('it run fetch');
     this.groupService.getGroupList().subscribe(
       (response: HttpResponse<GetGroupListResponse>) =>
         this.handleGroupListSuccess(response),

@@ -21,7 +21,6 @@ export class GroupService {
   }
 
   createNewGroupe(name: string): Observable<HttpResponse<PostGropeResponse>> {
-    console.log(name);
     return this.http.post<PostGropeResponse>(
       `${API_URL}/groups/create`,
       { name: name },
@@ -36,9 +35,4 @@ export class GroupService {
       `${API_URL}/groups/delete?groupID=${groupId}`
     );
   }
-  // logout(): Observable<ServerResponse> {
-  //   return this.http.delete<ServerResponse>(`${API_URL}/logout`, {
-  //     observe: 'response',
-  //   });
-  // }
 }

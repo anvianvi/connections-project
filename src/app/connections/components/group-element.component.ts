@@ -7,7 +7,7 @@ import {
   GroupItem,
   ServerResponse,
 } from 'src/app/shared/interfaces/interfaces';
-import { GroupService } from '../services/group-serices.service';
+import { GroupService } from '../services/group-api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/state/state.model';
@@ -97,7 +97,6 @@ export class GrupCardComponent {
   deleteSelectedGroup(id: string) {
     this.groupService.deleteGroup(id).subscribe(
       (response: HttpResponse<ServerResponse>) => {
-        console.log(response);
         if (response && response.status === 200) {
           this.store.dispatch(remuveGroupe({ groupeId: id }));
 
