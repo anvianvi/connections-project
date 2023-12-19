@@ -93,6 +93,8 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirati
       }
       .message-text {
         font-size: 16px;
+        overflow-wrap: break-word;
+
       }
     `,
   ],

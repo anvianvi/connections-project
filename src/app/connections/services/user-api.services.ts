@@ -98,9 +98,6 @@ export class UserApiService {
         panelClass: ['mat-accent'],
         horizontalPosition: 'right',
       });
-      console.log('response');
-      console.log(response);
-
       this.store.dispatch(
         updateConversationsList({ conversations: response.body.Items })
       );

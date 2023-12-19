@@ -17,6 +17,7 @@ import { DateService } from 'src/app/core/services/data.service';
 import { AppState } from 'src/app/state/state.model';
 import { Store, select } from '@ngrx/store';
 import { selectUserById } from 'src/app/state/selectors/users.selectors';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-group-dialog',
@@ -42,21 +43,22 @@ import { selectUserById } from 'src/app/state/selectors/users.selectors';
     <div class="counter-container">
       <span *ngIf="counter > 0"> {{ counter }} seconds until next update </span>
     </div>
-      <div class="mesages-wraper" *ngFor="let message of messages">
-        <div
-          class="message-container"
-          [ngStyle]="{
-            'margin-left': currentuser === message.authorID.S ? 'auto' : '0'
-          }"
-        >
-          <div class="message-date">
-            {{ dateService.formatUnixTimestamp(message.createdAt.S) }}
-          </div>
-          <div class="mesage-author">
-            {{ getUserNameByID(message.authorID.S) | async }}:
-          </div>
-          <div class="message-text">{{ message.message.S }}</div>
+    <div class="mesages-wraper" *ngFor="let message of messages">
+      <div
+        class="message-container"
+        [ngStyle]="{
+          'margin-left': currentuser === message.authorID.S ? 'auto' : '0'
+        }"
+      >
+        <div class="message-date">
+          {{ dateService.formatUnixTimestamp(message.createdAt.S) }}
+          {{ message.createdAt.S }}
         </div>
+        <div class="mesage-author">
+          {{ getUserNameByID(message.authorID.S) | async }}:
+        </div>
+        <div class="message-text">{{ message.message.S }}</div>
+      </div>
     </div>
   `,
   styles: [
@@ -98,6 +100,7 @@ import { selectUserById } from 'src/app/state/selectors/users.selectors';
       }
       .message-text {
         font-size: 16px;
+        overflow-wrap: break-word;
       }
     `,
   ],
@@ -111,7 +114,7 @@ export class GroupDialogPageComponent implements OnInit {
   isMygroupe = false;
   currenGroup: GroupItem | undefined;
   currentuser!: string;
-
+  dataOfLastFetch!: number;
   messages: MessageItem[] | undefined;
 
   constructor(
@@ -121,7 +124,8 @@ export class GroupDialogPageComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog,
     public dateService: DateService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private snackBar: MatSnackBar
   ) {
     this.currentuser = localStorage.getItem('uid') || '1';
   }
@@ -133,6 +137,7 @@ export class GroupDialogPageComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.isMygroupe = params['mygroupe'];
     });
+    this.dataOfLastFetch = Math.floor(Date.now());
   }
 
   private listenToRouteParams() {
@@ -148,11 +153,23 @@ export class GroupDialogPageComponent implements OnInit {
     this.location.back();
   }
 
-  fetchGroupMessages() {
-    this.groupApiService.getGroupMessagesRequest(this.groupId).subscribe(
+  fetchGroupMessages(since?: number) {
+    this.groupApiService.getGroupMessagesRequest(this.groupId, since).subscribe(
       (response: HttpResponse<GetGroupMessagesResponse>) => {
         console.log('cool we got correct response');
         console.log(response);
+        if (response.body?.Items.length == 0) {
+          console.log('there is no new messages sinse last fetch');
+          this.snackBar.open(
+            'There is no new messages sinse last fetch',
+            'OK',
+            {
+              duration: 10000,
+              panelClass: ['mat-accent'],
+              horizontalPosition: 'right',
+            }
+          );
+        }
         this.messages = response.body?.Items;
         this.messages?.sort((a, b) => {
           const createdAtA = Number(b.createdAt.S);
@@ -195,7 +212,7 @@ export class GroupDialogPageComponent implements OnInit {
   }
 
   updateList(identifier: string): void {
-    this.fetchGroupMessages();
+    this.fetchGroupMessages(this.dataOfLastFetch);
     this.isButtonDisabled = true;
     localStorage.setItem(
       `lastClickTimestamp_${identifier}`,
