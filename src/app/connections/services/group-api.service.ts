@@ -78,19 +78,11 @@ export class GroupService {
     response: HttpResponse<GetGroupMessagesResponse>
   ): void {
     if (response.status === 200 && response.body) {
-      this.snackBar.open('Conversation sucsesfuly created', 'OK', {
+      this.snackBar.open('Messages get successfully', 'OK', {
         duration: 5000,
         panelClass: ['mat-accent'],
         horizontalPosition: 'right',
       });
-      console.log(response);
-      // const newConversation = {
-      //   id: { S: response.body.conversationID },
-      //   companionID: { S: conmpanionID },
-      // };
-      // this.store.dispatch(
-      //   addNewConversation({ conversation: newConversation })
-      // );
     }
   }
 }

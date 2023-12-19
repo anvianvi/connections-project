@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import {
   CreateConversationResponse,
   GetConversationsListResponse,
+  GetGroupMessagesResponse,
   GetUserListResponse,
   ServerResponse,
 } from 'src/app/shared/interfaces/interfaces';
@@ -96,6 +97,9 @@ export class UserApiService {
         panelClass: ['mat-accent'],
         horizontalPosition: 'right',
       });
+      console.log('response');
+      console.log(response);
+
       this.store.dispatch(
         updateConversationsList({ conversations: response.body.Items })
       );
@@ -113,5 +117,31 @@ export class UserApiService {
         verticalPosition: 'top',
       }
     );
+  }
+
+  getUserChatMessagesRequest(
+    conversationID: string,
+    since?: number
+  ): Observable<HttpResponse<GetGroupMessagesResponse>> {
+    return this.http.get<GetGroupMessagesResponse>(
+      `${API_URL}/conversations/read?conversationID=${conversationID}&since=${
+        since || ''
+      }`,
+      {
+        observe: 'response',
+      }
+    );
+  }
+
+  handleGetUserChatMessagesSuccess(
+    response: HttpResponse<GetGroupMessagesResponse>
+  ): void {
+    if (response.status === 200 && response.body) {
+      this.snackBar.open('Messages get successfully', 'OK', {
+        duration: 5000,
+        panelClass: ['mat-accent'],
+        horizontalPosition: 'right',
+      });
+    }
   }
 }

@@ -42,7 +42,6 @@ import { selectUserById } from 'src/app/state/selectors/users.selectors';
     <div class="counter-container">
       <span *ngIf="counter > 0"> {{ counter }} seconds until next update </span>
     </div>
-    <div>
       <div class="mesages-wraper" *ngFor="let message of messages">
         <div
           class="message-container"
@@ -58,7 +57,6 @@ import { selectUserById } from 'src/app/state/selectors/users.selectors';
           </div>
           <div class="message-text">{{ message.message.S }}</div>
         </div>
-      </div>
     </div>
   `,
   styles: [
