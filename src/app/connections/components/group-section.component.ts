@@ -6,7 +6,7 @@ import {
 } from 'src/app/shared/interfaces/interfaces';
 import { HttpResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, of, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateGroupModalComponent } from './create-groupe-modal.component';
 import { select, Store } from '@ngrx/store';
@@ -79,13 +79,26 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
     private groupService: GroupService,
     private snackBar: MatSnackBar,
     public dialog: MatDialog
-  ) {}
+  ) {
+    this.groupsList$ = this.store.pipe(select(selectGroups));
+  }
 
   ngOnInit() {
     this.startCountdown('groupList');
-    this.fetchGroupList();
+    console.log(this.store.pipe(select(selectGroups)));
+
+    //
     this.currentuser = localStorage.getItem('uid') || '1';
-    this.groupsList$ = this.store.pipe(select(selectGroups));
+    console.log(this.store.pipe(select(selectGroups)));
+    this.groupsList$.pipe().subscribe((groups) => {
+      console.log('here our groups we will check for length');
+
+      console.log(groups);
+
+      if (groups.length === 0) {
+        this.fetchGroupList();
+      }
+    });
   }
 
   ngOnDestroy(): void {}
