@@ -11,7 +11,6 @@ import {
 } from 'src/app/shared/interfaces/interfaces';
 import { API_URL } from 'src/app/shared/variables/api';
 import { remuveGroupe } from 'src/app/state/actions/group.actions';
-import { addNewConversation } from 'src/app/state/actions/user.actions';
 import { AppState } from 'src/app/state/state.model';
 
 @Injectable({

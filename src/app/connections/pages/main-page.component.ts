@@ -11,10 +11,8 @@ import { Component, OnInit } from '@angular/core';
       ::ng-deep app-main {
         display: flex;
         justify-content: center;
-        align-items: center;
         flex-wrap: wrap;
         gap: 10px;
-        height: 100%;
         padding-top: 20px;
       }
 

@@ -16,6 +16,11 @@ export const selectUsers = createSelector(
   (state) => state.users
 );
 
+export const selectUserById = (id: string) =>
+  createSelector(selectUsers, (users) =>
+    users.find((user) => user.uid.S === id)
+  );
+
 export const selectConversations = createSelector(
   selectUsersState,
   (state) => state.conversations

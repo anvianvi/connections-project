@@ -5,9 +5,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import {
   GetGroupMessagesResponse,
+  GroupItem,
   MessageItem,
 } from 'src/app/shared/interfaces/interfaces';
 import { HttpResponse } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confiration-dialog.component';
+
+import { DateService } from 'src/app/core/services/data.service';
 
 @Component({
   selector: 'app-group-dialog',
@@ -21,17 +26,27 @@ import { HttpResponse } from '@angular/common/http';
       >
         <mat-icon>refresh</mat-icon>
       </button>
+      <button
+        mat-icon-button
+        *ngIf="isMygroupe"
+        (click)="openConfirmationDialog(groupId)"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
     </div>
 
     <div class="counter-container">
       <span *ngIf="counter > 0"> {{ counter }} seconds until next update </span>
     </div>
     <div>
-      group dialog page worck
-      <p>{{ groupId }}</p>
-      <div *ngFor="let message of messages">
-        {{ message.createdAt.S }} - {{ message.message.S }} -
-        {{ message.authorID.S }}
+      <div class="mesages-wraper" *ngFor="let message of messages">
+        <div class="message-container">
+          <div class="message-date">
+            {{ dateService.formatUnixTimestamp(message.createdAt.S) }}
+          </div>
+          <div class="mesage-author">{{ message.authorID.S }}:</div>
+          <div class="message-text">{{ message.message.S }}</div>
+        </div>
       </div>
     </div>
   `,
@@ -55,6 +70,26 @@ import { HttpResponse } from '@angular/common/http';
           text-decoration: none;
         }
       }
+
+      .message-container {
+        background: #fefcf3;
+        border: 2px solid #f0dbdb;
+        padding: 5px;
+        width: 350px;
+        border-radius: 10px;
+        margin-bottom: 5px;
+      }
+      .message-date {
+        margin-bottom: 5px;
+      }
+      .mesage-author {
+        font-weight: 500;
+        font-size: 18px;
+        margin-bottom: 5px;
+      }
+      .message-text {
+        font-size: 16px;
+      }
     `,
   ],
 })
@@ -64,20 +99,27 @@ export class GroupDialogPageComponent implements OnInit {
   isButtonDisabled = false;
   private detailedSub = new Subject<void>();
   groupId!: string;
+  isMygroupe = false;
+  currenGroup: GroupItem | undefined;
 
   messages: MessageItem[] | undefined;
 
   constructor(
     private location: Location,
-    private groupAliService: GroupService,
+    private groupApiService: GroupService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog,
+    public dateService: DateService
   ) {}
 
   ngOnInit() {
     this.listenToRouteParams();
     this.fetchGroupMessages();
     this.startCountdown('group_chat_' + this.groupId);
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.isMygroupe = params['mygroupe'];
+    });
   }
 
   private listenToRouteParams() {
@@ -94,20 +136,43 @@ export class GroupDialogPageComponent implements OnInit {
   }
 
   fetchGroupMessages() {
-    this.groupAliService.getGroupMessagesRequest(this.groupId).subscribe(
+    this.groupApiService.getGroupMessagesRequest(this.groupId).subscribe(
       (response: HttpResponse<GetGroupMessagesResponse>) => {
         console.log('cool we got correct response');
         console.log(response);
         this.messages = response.body?.Items;
+        this.messages?.sort((a, b) => {
+          const createdAtA = Number(b.createdAt.S);
+          const createdAtB = Number(a.createdAt.S);
+          return createdAtB - createdAtA;
+        });
       },
       (error) => {
         if (error.error.type === 'InvalidIDException') {
           this.router.navigate(['404']);
-
-          console.log('you are doing well');
         }
       }
     );
+  }
+  // getUserNameByID(id){
+
+  // }
+
+  openConfirmationDialog(groupeId: string): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '250px',
+      data: {
+        title: 'Confirmation',
+        content: 'Are you sure you want to delete this group?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'confirm') {
+        this.groupApiService.handleDeleteSelectedGroup(groupeId);
+        this.router.navigate(['/']);
+      }
+    });
   }
 
   updateList(identifier: string): void {
@@ -118,19 +183,15 @@ export class GroupDialogPageComponent implements OnInit {
       Date.now().toString()
     );
     this.startCountdown(identifier);
-    console.log(identifier);
   }
 
   startCountdown(identifier: string): void {
-    console.log(identifier);
-
     this.isButtonDisabled = true;
     let secondsRemaining = Math.floor(
       (Date.now() -
         Number(localStorage.getItem(`lastClickTimestamp_${identifier}`))) /
         1000
     );
-    console.log();
     this.counter = 60 - secondsRemaining;
     if (this.counter < 1) {
       this.isButtonDisabled = false;

@@ -11,7 +11,7 @@ export const selectGroups = createSelector(
   (state) => state.groups
 );
 
-// export const selectGroupById = (videoId: string) =>
-//   createSelector(selectAllVideoCards, (videos) =>
-//     videos.find((video) => video.id === videoId)
-//   );
+export const selectGroupById = (id: string) =>
+  createSelector(selectGroups, (groups) =>
+    groups.find((group) => group.id.S === id)
+  );

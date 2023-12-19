@@ -1,17 +1,9 @@
-import { HttpResponse } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confiration-dialog.component';
-import {
-  GroupItem,
-  ServerResponse,
-} from 'src/app/shared/interfaces/interfaces';
+import { GroupItem } from 'src/app/shared/interfaces/interfaces';
 import { GroupService } from '../services/group-api.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Store } from '@ngrx/store';
-import { AppState } from 'src/app/state/state.model';
-import { remuveGroupe } from 'src/app/state/actions/group.actions';
 
 @Component({
   selector: 'app-group-card',
@@ -61,9 +53,7 @@ export class GrupCardComponent {
   isMygroupe = false;
 
   constructor(
-    private store: Store<AppState>,
     private router: Router,
-    private snackBar: MatSnackBar,
     public dialog: MatDialog,
     private groupService: GroupService
   ) {}
@@ -94,6 +84,9 @@ export class GrupCardComponent {
   }
 
   openGroupe(groupId: string) {
-    this.router.navigate(['/group', groupId]);
+    const navigationExtras: NavigationExtras = {
+      queryParams: { mygroupe: this.isMygroupe },
+    };
+    this.router.navigate(['/group', groupId], navigationExtras);
   }
 }

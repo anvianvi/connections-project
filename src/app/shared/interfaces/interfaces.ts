@@ -41,10 +41,12 @@ export interface GroupItem {
   createdAt: { S: string };
   createdBy: { S: string };
 }
+
 export interface PostGropeResponse {
   status: number;
   groupID: string;
 }
+
 export interface GetUserListResponse {
   status: number;
   Count: number;
