@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-main',
   template: `
     <div class="main-column"><app-group-section></app-group-section></div>
-    <div class="main-column"></div>
+    <div class="main-column"><app-user-section></app-user-section></div>
   `,
   styles: [
     `
