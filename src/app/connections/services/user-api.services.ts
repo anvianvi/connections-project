@@ -13,6 +13,7 @@ import {
 import { API_URL } from 'src/app/shared/variables/api';
 import {
   addNewConversation,
+  remuveConversation,
   updateConversationsList,
   updateUsersList,
 } from 'src/app/state/actions/user.actions';
@@ -143,5 +144,31 @@ export class UserApiService {
         horizontalPosition: 'right',
       });
     }
+  }
+
+  deleteConversation(
+    conversationID: string
+  ): Observable<HttpResponse<ServerResponse>> {
+    return this.http.delete<HttpResponse<ServerResponse>>(
+      `${API_URL}/conversations/delete?conversationID=${conversationID}`,
+      {
+        observe: 'response',
+      }
+    );
+  }
+  handleDeleteSelectedConversation(id: string) {
+    this.deleteConversation(id).subscribe(
+      (response: HttpResponse<ServerResponse>) => {
+        if (response.status === 200) {
+          this.store.dispatch(remuveConversation({ conversationID: id }));
+
+          this.snackBar.open('Conversation deleted successfully', 'OK', {
+            duration: 7000,
+            panelClass: ['mat-accent'],
+            horizontalPosition: 'right',
+          });
+        }
+      }
+    );
   }
 }

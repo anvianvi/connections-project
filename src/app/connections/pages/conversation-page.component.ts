@@ -14,6 +14,7 @@ import {
 import { HttpResponse } from '@angular/common/http';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { selectUserById } from 'src/app/state/selectors/users.selectors';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confiration-dialog.component';
 
 @Component({
   selector: 'app-conversation-page',
@@ -27,13 +28,9 @@ import { selectUserById } from 'src/app/state/selectors/users.selectors';
       >
         <mat-icon>refresh</mat-icon>
       </button>
-      <!-- <button
-        mat-icon-button
-        *ngIf="isMygroupe"
-        (click)="openConfirmationDialog(groupId)"
-      >
+      <button mat-icon-button (click)="openConfirmationDialog(conversationId)">
         <mat-icon>delete</mat-icon>
-      </button> -->
+      </button>
     </div>
 
     <div class="counter-container">
@@ -125,6 +122,23 @@ export class ConversationPageComponent implements OnInit {
     this.listenToRouteParams();
     this.fetchUsersMessages();
     this.startCountdown('chat_' + this.conversationId);
+  }
+
+  openConfirmationDialog(groupeId: string): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '250px',
+      data: {
+        title: 'Confirmation',
+        content: 'Are you sure you want to delete this conversation?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'confirm') {
+        this.userApiServices.handleDeleteSelectedConversation(groupeId);
+        this.router.navigate(['/']);
+      }
+    });
   }
 
   private listenToRouteParams() {
