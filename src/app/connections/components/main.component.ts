@@ -12,7 +12,8 @@ import { Component, OnInit } from '@angular/core';
         display: flex;
         justify-content: center;
         align-items: center;
-        flex-wrap: flex-wrap;
+        flex-wrap: wrap;
+        gap: 10px;
         height: 100%;
         padding-top: 20px;
       }

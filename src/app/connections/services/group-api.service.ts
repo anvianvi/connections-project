@@ -32,7 +32,10 @@ export class GroupService {
 
   deleteGroup(groupId: string): Observable<HttpResponse<ServerResponse>> {
     return this.http.delete<HttpResponse<ServerResponse>>(
-      `${API_URL}/groups/delete?groupID=${groupId}`
+      `${API_URL}/groups/delete?groupID=${groupId}`,
+      {
+        observe: 'response',
+      }
     );
   }
 }

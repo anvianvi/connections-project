@@ -120,16 +120,29 @@ export class CreateGroupModalComponent implements OnInit {
     }
   }
 
-  private handleGroupListError(error: { error: { message: string } }): void {
-    this.snackBar.open(
-      `Oops, something went wrong: ${error.error.message}`,
-      'OK',
-      {
+  private handleGroupListError(error: {
+    status: number;
+    message: string;
+    error: { message: unknown };
+  }): void {
+    if (error.status == 500) {
+      this.snackBar.open(`Oops, something went wrong: ${error.message}`, 'OK', {
         duration: 15000,
         panelClass: ['mat-error'],
         horizontalPosition: 'center',
         verticalPosition: 'top',
-      }
-    );
+      });
+    } else {
+      this.snackBar.open(
+        `Oops, something went wrong: ${error.error.message}`,
+        'OK',
+        {
+          duration: 15000,
+          panelClass: ['mat-error'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        }
+      );
+    }
   }
 }

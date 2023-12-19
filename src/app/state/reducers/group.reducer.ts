@@ -26,6 +26,6 @@ export const groupReducer = createReducer(
   }),
   on(GroupActions.remuveGroupe, (state, { groupeId }) => ({
     ...state,
-    videoItems: state.groups.filter((group) => group.id.S !== groupeId),
+    groups: state.groups.filter((group) => group.id.S !== groupeId),
   }))
 );

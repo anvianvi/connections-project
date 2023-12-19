@@ -45,7 +45,7 @@ import { remuveGroupe } from 'src/app/state/actions/group.actions';
           display: flex;
           align-items: center;
           min-width: 300px;
-          height: 30px;
+          height: 50px;
           padding-left: 5px;
         }
         .group-name:hover {
@@ -97,7 +97,7 @@ export class GrupCardComponent {
   deleteSelectedGroup(id: string) {
     this.groupService.deleteGroup(id).subscribe(
       (response: HttpResponse<ServerResponse>) => {
-        if (response && response.status === 200) {
+        if (response.status === 200) {
           this.store.dispatch(remuveGroupe({ groupeId: id }));
 
           this.snackBar.open('Group deleted successfully', 'OK', {
@@ -112,7 +112,7 @@ export class GrupCardComponent {
           `Oops, something went wrong: ${error.error.message}`,
           'OK',
           {
-            duration: 15000,
+            duration: 5000,
             panelClass: ['mat-error'],
             horizontalPosition: 'center',
             verticalPosition: 'top',

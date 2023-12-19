@@ -1,23 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GroupService } from '../services/group-api.service';
 import {
   GetConversationsListResponse,
-  GetGroupListResponse,
   GetUserListResponse,
-  GroupItem,
   MyCompanionsItem,
 } from 'src/app/shared/interfaces/interfaces';
 import { HttpResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, of, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateGroupModalComponent } from './create-groupe-modal.component';
 import { select, Store } from '@ngrx/store';
 import { AppState } from 'src/app/state/state.model';
-import { selectGroups } from 'src/app/state/selectors/group.selectors';
-import { updateGroupsList } from 'src/app/state/actions/group.actions';
 import { UserApiService } from '../services/user-api.services';
-import { updateUsersList } from 'src/app/state/actions/user.actions';
 import { selectMyCompanions } from 'src/app/state/selectors/users.selectors';
 
 @Component({
@@ -39,8 +33,11 @@ import { selectMyCompanions } from 'src/app/state/selectors/users.selectors';
           {{ counter }} seconds until next update
         </span>
       </div>
-      <div *ngFor="let companion of myCompanions$ | async">
-        <p>{{ companion.userName.S }}</p>
+      <div>
+        <app-conversation-card
+          *ngFor="let companion of myCompanions$ | async"
+          [conversation]="companion"
+        ></app-conversation-card>
       </div>
 
       <!-- <div *ngIf="usersList$ | async; asusersList"> -->
