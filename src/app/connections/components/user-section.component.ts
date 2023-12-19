@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GroupService } from '../services/group-api.service';
 import {
   GetGroupListResponse,
+  GetUserListResponse,
   GroupItem,
 } from 'src/app/shared/interfaces/interfaces';
 import { HttpResponse } from '@angular/common/http';
@@ -13,6 +14,7 @@ import { select, Store } from '@ngrx/store';
 import { AppState } from 'src/app/state/state.model';
 import { selectGroups } from 'src/app/state/selectors/group.selectors';
 import { updateGroupsList } from 'src/app/state/actions/group.actions';
+import { UserApiService } from '../services/user-api.services';
 
 @Component({
   selector: 'app-user-section',
@@ -76,14 +78,14 @@ export class UserSectionComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<AppState>,
-    private groupService: GroupService,
+    private userApiServices: UserApiService,
     private snackBar: MatSnackBar,
     public dialog: MatDialog
   ) {}
 
   ngOnInit() {
     this.startCountdown('userList');
-    this.fetchGroupList();
+    // this.fetchGroupList();
     this.currentuser = localStorage.getItem('uid') || '1';
     // this.groupsList$ = this.store.pipe(select(selectGroups));
   }
@@ -91,7 +93,7 @@ export class UserSectionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {}
 
   updateList(identifier: string): void {
-    // this.fetchGroupList();
+    this.fetchUserList();
     this.isButtonDisabled = true;
     localStorage.setItem(
       `lastClickTimestamp_${identifier}`,
@@ -124,11 +126,17 @@ export class UserSectionComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  fetchGroupList() {
-    this.groupService.getGroupList().subscribe(
-      (response: HttpResponse<GetGroupListResponse>) =>
-        this.handleGroupListSuccess(response),
-      (error) => this.handleGroupListError(error)
+  fetchUserList() {
+    this.userApiServices.getUsersList().subscribe(
+      (response: HttpResponse<GetUserListResponse>) => {
+        // this.handleGroupListSuccess(response);
+        console.log(response);
+        //here we wiil     this.isButtonDisabled = false;
+      },
+      (error) => {
+        this.userApiServices.handleResponseError(error);
+        console.log('errore');
+      }
     );
   }
 
@@ -144,20 +152,6 @@ export class UserSectionComponent implements OnInit, OnDestroy {
       console.log(response.body.Items);
       this.store.dispatch(updateGroupsList({ groups: response.body.Items }));
     }
-  }
-
-  private handleGroupListError(error: { error: { message: string } }): void {
-    this.snackBar.open(
-      `Oops, something went wrong: ${error.error.message}`,
-      'OK',
-      {
-        duration: 5000,
-        panelClass: ['mat-error'],
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-      }
-    );
-    this.isButtonDisabled = false;
   }
 
   createNewGrope() {

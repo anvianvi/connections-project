@@ -70,3 +70,8 @@ export interface CreateConversationResponse {
   status: number;
   conversationID: string;
 }
+export interface MyCompanionsItem {
+  convercationId?: { S: string };
+  companionID: { S: string };
+  userName: { S: string };
+}
