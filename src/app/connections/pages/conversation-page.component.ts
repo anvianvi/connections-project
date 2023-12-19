@@ -15,6 +15,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { selectUserById } from 'src/app/state/selectors/users.selectors';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confiration-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-conversation-page',
@@ -94,7 +95,6 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirati
       .message-text {
         font-size: 16px;
         overflow-wrap: break-word;
-
       }
     `,
   ],
@@ -107,6 +107,7 @@ export class ConversationPageComponent implements OnInit {
   counter: number = 0;
   timer: ReturnType<typeof setTimeout> | undefined;
   isButtonDisabled = false;
+  dataOfLastFetch!: number;
 
   constructor(
     private location: Location,
@@ -115,7 +116,8 @@ export class ConversationPageComponent implements OnInit {
     public dialog: MatDialog,
     public dateService: DateService,
     private store: Store<AppState>,
-    private userApiServices: UserApiService
+    private userApiServices: UserApiService,
+    private snackBar: MatSnackBar
   ) {
     this.currentuser = localStorage.getItem('uid') || '1';
   }
@@ -124,6 +126,7 @@ export class ConversationPageComponent implements OnInit {
     this.listenToRouteParams();
     this.fetchUsersMessages();
     this.startCountdown('chat_' + this.conversationId);
+    this.dataOfLastFetch = Math.floor(Date.now());
   }
 
   openConfirmationDialog(groupeId: string): void {
@@ -160,13 +163,25 @@ export class ConversationPageComponent implements OnInit {
     );
   }
 
-  fetchUsersMessages() {
+  fetchUsersMessages(since?: number) {
     this.userApiServices
-      .getUserChatMessagesRequest(this.conversationId)
+      .getUserChatMessagesRequest(this.conversationId, since)
       .subscribe(
         (response: HttpResponse<GetGroupMessagesResponse>) => {
           console.log('cool we got correct response');
           console.log(response);
+          if (response.body?.Items.length == 0) {
+            console.log('there is no new messages sinse last fetch');
+            this.snackBar.open(
+              'There is no new messages sinse last fetch',
+              'OK',
+              {
+                duration: 10000,
+                panelClass: ['mat-accent'],
+                horizontalPosition: 'right',
+              }
+            );
+          }
           this.messages = response.body?.Items;
           this.messages?.sort((a, b) => {
             const createdAtA = Number(b.createdAt.S);
@@ -184,7 +199,7 @@ export class ConversationPageComponent implements OnInit {
   }
 
   updateList(identifier: string): void {
-    this.fetchUsersMessages();
+    this.fetchUsersMessages(this.dataOfLastFetch);
     this.isButtonDisabled = true;
     localStorage.setItem(
       `lastClickTimestamp_${identifier}`,
