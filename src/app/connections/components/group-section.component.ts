@@ -67,7 +67,7 @@ import { updateGroupsList } from 'src/app/state/actions/group.actions';
     `,
   ],
 })
-export class GroupSectionComponent implements OnInit, OnDestroy {
+export class GroupSectionComponent implements OnInit {
   counter: number = 0;
   timer: ReturnType<typeof setTimeout> | undefined;
   isButtonDisabled = false;
@@ -88,12 +88,10 @@ export class GroupSectionComponent implements OnInit, OnDestroy {
     this.currentuser = localStorage.getItem('uid') || '1';
     this.groupsList$.pipe().subscribe((groups) => {
       if (groups.length === 0) {
-        // this.fetchGroupList();
+        this.fetchGroupList();
       }
     });
   }
-
-  ngOnDestroy(): void {}
 
   updateList(identifier: string): void {
     this.fetchGroupList();

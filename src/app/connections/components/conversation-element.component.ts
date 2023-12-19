@@ -6,7 +6,7 @@ import { MyCompanionsItem } from 'src/app/shared/interfaces/interfaces';
   selector: 'app-conversation-card',
   template: `<div
     class="conversation-card-container"
-    [ngStyle]="{ background: !isExistingConversation ? '#FEFCF3' : '#F0DBDB' }"
+    [ngStyle]="{ background: isExistingConversation ? '#FEFCF3' : '#F0DBDB' }"
   >
     <div
       class="conversation-name"
@@ -49,7 +49,6 @@ export class ConversationCardComponent {
   constructor(public dialog: MatDialog) {}
 
   ngOnInit() {
-    console.log(this.conversation.conversationId?.S);
     if (this.conversation.conversationId?.S != null) {
       this.isExistingConversation = true;
     }

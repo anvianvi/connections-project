@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { GroupService } from '../services/group-api.service';
@@ -54,7 +54,7 @@ import { Store } from '@ngrx/store';
     `,
   ],
 })
-export class CreateGroupModalComponent implements OnInit {
+export class CreateGroupModalComponent {
   groupForm: FormGroup;
   isFetchButtonDisabled = false;
 
@@ -72,8 +72,6 @@ export class CreateGroupModalComponent implements OnInit {
       ],
     });
   }
-
-  ngOnInit(): void {}
 
   onCancel(): void {
     this.dialogRef.close();

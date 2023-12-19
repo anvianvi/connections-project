@@ -1,14 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   GetConversationsListResponse,
   GetUserListResponse,
   MyCompanionsItem,
 } from 'src/app/shared/interfaces/interfaces';
 import { HttpResponse } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { CreateGroupModalComponent } from './create-groupe-modal.component';
 import { select, Store } from '@ngrx/store';
 import { AppState } from 'src/app/state/state.model';
 import { UserApiService } from '../services/user-api.services';
@@ -39,21 +37,10 @@ import { selectMyCompanions } from 'src/app/state/selectors/users.selectors';
           [conversation]="companion"
         ></app-conversation-card>
       </div>
-
-      <!-- <div *ngIf="usersList$ | async; asusersList"> -->
-      <!-- <app-group-card
-          *ngFor="let user of usersList"
-          [user]="user"
-          [currentuser]="currentuser"
-        ></app-group-card> -->
-      <!-- </div> -->
     </div>
   `,
   styles: [
     `
-      ::ng-deep app-user-section {
-      }
-
       .counter-container {
         height: 30px;
         display: flex;
@@ -74,17 +61,15 @@ import { selectMyCompanions } from 'src/app/state/selectors/users.selectors';
     `,
   ],
 })
-export class UserSectionComponent implements OnInit, OnDestroy {
+export class UserSectionComponent implements OnInit {
   counter: number = 0;
   timer: ReturnType<typeof setTimeout> | undefined;
   isButtonDisabled = false;
-  currentuser!: string;
   myCompanions$!: Observable<MyCompanionsItem[]>;
 
   constructor(
     private store: Store<AppState>,
     private userApiServices: UserApiService,
-    private snackBar: MatSnackBar,
     public dialog: MatDialog
   ) {
     this.myCompanions$ = this.store.pipe(select(selectMyCompanions));
@@ -92,12 +77,14 @@ export class UserSectionComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.startCountdown('userList');
-    // this.fetchGroupList();
-    this.currentuser = localStorage.getItem('uid') || '1';
-    // this.groupsList$ = this.store.pipe(select(selectGroups));
+    this.myCompanions$.pipe().subscribe((companions) => {
+      console.log(companions);
+      if (companions.length === 0) {
+        this.fetchUserList();
+        this.fetchConversationsList();
+      }
+    });
   }
-
-  ngOnDestroy(): void {}
 
   updateList(identifier: string): void {
     this.fetchUserList();
@@ -156,12 +143,5 @@ export class UserSectionComponent implements OnInit, OnDestroy {
         this.isButtonDisabled = false;
       }
     );
-  }
-
-  createNewGrope() {
-    const dialogRef = this.dialog.open(CreateGroupModalComponent, {
-      width: '500px',
-      height: '150px',
-    });
   }
 }

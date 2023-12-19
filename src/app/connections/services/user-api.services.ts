@@ -10,7 +10,10 @@ import {
   ServerResponse,
 } from 'src/app/shared/interfaces/interfaces';
 import { API_URL } from 'src/app/shared/variables/api';
-import { updateConversationsList, updateUsersList } from 'src/app/state/actions/user.actions';
+import {
+  updateConversationsList,
+  updateUsersList,
+} from 'src/app/state/actions/user.actions';
 import { AppState } from 'src/app/state/state.model';
 
 @Injectable({
@@ -65,25 +68,23 @@ export class UserApiService {
         panelClass: ['mat-accent'],
         horizontalPosition: 'right',
       });
-      console.log(response.body.Items);
       this.store.dispatch(updateUsersList({ users: response.body.Items }));
     }
   }
 
-  handleGetonversationsSuccess(response: HttpResponse<GetConversationsListResponse>): void {
+  handleGetonversationsSuccess(
+    response: HttpResponse<GetConversationsListResponse>
+  ): void {
     if (response.status === 200 && response.body) {
       this.snackBar.open('Conversations List Received', 'OK', {
         duration: 5000,
         panelClass: ['mat-accent'],
         horizontalPosition: 'right',
       });
-      console.log(response.body.Items);
-      this.store.dispatch(updateConversationsList({ conversations: response.body.Items }));
+      this.store.dispatch(
+        updateConversationsList({ conversations: response.body.Items })
+      );
     }
-  }
-
-  createCompanionsList(){
-    
   }
 
   handleResponseError(error: { error: { message: string } }): void {
