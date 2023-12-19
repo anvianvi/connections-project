@@ -7,6 +7,7 @@ import { GroupSectionComponent } from './components/group-section.component';
 import { GrupCardComponent } from './components/group-element.component';
 import { CreateGroupModalComponent } from './components/create-groupe-modal.component';
 import { UserSectionComponent } from './components/user-section.component';
+import { ConversationCardComponent } from './components/conversation-element.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { UserSectionComponent } from './components/user-section.component';
     GrupCardComponent,
     CreateGroupModalComponent,
     UserSectionComponent,
+    ConversationCardComponent,
   ],
   imports: [CommonModule, SharedModule],
   exports: [MainPageComponent],
