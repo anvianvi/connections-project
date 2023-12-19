@@ -88,37 +88,9 @@ export class GrupCardComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'confirm') {
-        this.deleteSelectedGroup(groupeId);
+        this.groupService.handleDeleteSelectedGroup(groupeId);
       }
     });
-  }
-
-  deleteSelectedGroup(id: string) {
-    this.groupService.deleteGroup(id).subscribe(
-      (response: HttpResponse<ServerResponse>) => {
-        if (response.status === 200) {
-          this.store.dispatch(remuveGroupe({ groupeId: id }));
-
-          this.snackBar.open('Group deleted successfully', 'OK', {
-            duration: 7000,
-            panelClass: ['mat-accent'],
-            horizontalPosition: 'right',
-          });
-        }
-      },
-      (error) => {
-        this.snackBar.open(
-          `Oops, something went wrong: ${error.error.message}`,
-          'OK',
-          {
-            duration: 5000,
-            panelClass: ['mat-error'],
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          }
-        );
-      }
-    );
   }
 
   openGroupe(groupId: string) {

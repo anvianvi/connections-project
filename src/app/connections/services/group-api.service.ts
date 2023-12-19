@@ -10,6 +10,7 @@ import {
   ServerResponse,
 } from 'src/app/shared/interfaces/interfaces';
 import { API_URL } from 'src/app/shared/variables/api';
+import { remuveGroupe } from 'src/app/state/actions/group.actions';
 import { addNewConversation } from 'src/app/state/actions/user.actions';
 import { AppState } from 'src/app/state/state.model';
 
@@ -46,6 +47,20 @@ export class GroupService {
         observe: 'response',
       }
     );
+  }
+
+  handleDeleteSelectedGroup(id: string) {
+    this.deleteGroup(id).subscribe((response: HttpResponse<ServerResponse>) => {
+      if (response.status === 200) {
+        this.store.dispatch(remuveGroupe({ groupeId: id }));
+
+        this.snackBar.open('Group deleted successfully', 'OK', {
+          duration: 7000,
+          panelClass: ['mat-accent'],
+          horizontalPosition: 'right',
+        });
+      }
+    });
   }
 
   getGroupMessagesRequest(
