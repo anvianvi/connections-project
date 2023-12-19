@@ -26,25 +26,6 @@ export const selectCompanions = createSelector(
   (state) => state.companions
 );
 
-// export const selectMyCompanions = (currentUserID: string) =>
-//   createSelector(
-//     selectUsers,
-//     selectConversations,
-//     (users: UserItem[], conversations: ConversationsItem[]) => {
-//       return users
-//         .filter((user) => user.uid.S != currentUserID)
-//         .map((user: UserItem) => {
-//           const conversation = conversations.find(
-//             (conv: ConversationsItem) => conv.companionID.S === user.uid.S
-//           );
-//           return {
-//             conversationId: { S: conversation ? conversation.id.S : null },
-//             companionID: { S: user.uid.S },
-//             userName: { S: user.name.S },
-//           } as MyCompanionsItem;
-//         });
-//     }
-//   );
 export const selectMyCompanions = (currentUserID: string) =>
   createSelector(
     selectUsers,

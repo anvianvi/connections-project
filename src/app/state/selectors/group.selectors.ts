@@ -10,3 +10,8 @@ export const selectGroups = createSelector(
   selectGroupState,
   (state) => state.groups
 );
+
+// export const selectGroupById = (videoId: string) =>
+//   createSelector(selectAllVideoCards, (videos) =>
+//     videos.find((video) => video.id === videoId)
+//   );

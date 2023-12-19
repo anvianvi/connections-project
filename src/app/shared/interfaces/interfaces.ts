@@ -79,3 +79,14 @@ export interface MyCompanionsItem {
   companionID: { S: string };
   userName: { S: string };
 }
+
+export interface GetGroupMessagesResponse {
+  Count: number;
+  Items: MessageItem[];
+}
+
+export interface MessageItem {
+  authorID: { S: string };
+  message: { S: string };
+  createdAt: { S: string };
+}
