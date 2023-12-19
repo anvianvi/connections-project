@@ -10,3 +10,5 @@
 - [ ] Bonus: Style theme 50 points
 
 Total score: 665 / 800 points
+
+link to repo: https://github.com/anvianvi/connections-project
