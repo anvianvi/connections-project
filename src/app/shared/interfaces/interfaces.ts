@@ -51,10 +51,6 @@ export interface GetUserListResponse {
   Items: UserItem[];
   error?: ErrorResponse;
 }
-export interface UserItem {
-  name: { S: string };
-  uid: { S: string };
-}
 
 export interface GetConversationsListResponse {
   status: number;
@@ -62,16 +58,30 @@ export interface GetConversationsListResponse {
   Items: ConversationsItem[];
   error?: ErrorResponse;
 }
-export interface ConversationsItem {
-  id: { S: string };
-  companionID: { S: string };
-}
+
 export interface CreateConversationResponse {
   status: number;
   conversationID: string;
 }
+
+export interface UserItem {
+  name: { S: string };
+  uid: { S: string };
+}
+
+export interface ConversationsItem {
+  id: { S: string };
+  companionID: { S: string };
+}
+
 export interface MyCompanionsItem {
-  convercationId?: { S: string };
+  conversationId?: { S: string };
   companionID: { S: string };
   userName: { S: string };
 }
+
+// export interface MyCompanionsItem {
+//   convercationId?: { S: string }; if there is conversation with companionID == userItem.uid then convercationId =ConversationsItem.id
+//   companionID: { S: string }; = userItem.uid
+//   userName: { S: string }; = userItem.name
+// }

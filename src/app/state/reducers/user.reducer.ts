@@ -1,4 +1,4 @@
-import { Action, createReducer, on } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 import * as UserActions from '../actions/user.actions';
 import {
   ConversationsItem,
@@ -24,6 +24,18 @@ export const userReducer = createReducer(
     return {
       ...state,
       users: users,
+    };
+  }),
+  on(UserActions.updateConversationsList, (state, { conversations }) => {
+    return {
+      ...state,
+      conversations: conversations,
+    };
+  }),
+  on(UserActions.updateCompanionsList, (state, { companions }) => {
+    return {
+      ...state,
+      companions: companions,
     };
   })
 );

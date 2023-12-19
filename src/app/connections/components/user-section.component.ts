@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GroupService } from '../services/group-api.service';
 import {
+  GetConversationsListResponse,
   GetGroupListResponse,
   GetUserListResponse,
   GroupItem,
+  MyCompanionsItem,
 } from 'src/app/shared/interfaces/interfaces';
 import { HttpResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -15,6 +17,8 @@ import { AppState } from 'src/app/state/state.model';
 import { selectGroups } from 'src/app/state/selectors/group.selectors';
 import { updateGroupsList } from 'src/app/state/actions/group.actions';
 import { UserApiService } from '../services/user-api.services';
+import { updateUsersList } from 'src/app/state/actions/user.actions';
+import { selectMyCompanions } from 'src/app/state/selectors/users.selectors';
 
 @Component({
   selector: 'app-user-section',
@@ -35,6 +39,10 @@ import { UserApiService } from '../services/user-api.services';
           {{ counter }} seconds until next update
         </span>
       </div>
+      <div *ngFor="let companion of myCompanions$ | async">
+        <p>{{ companion.userName.S }}</p>
+      </div>
+
       <!-- <div *ngIf="usersList$ | async; asusersList"> -->
       <!-- <app-group-card
           *ngFor="let user of usersList"
@@ -74,14 +82,16 @@ export class UserSectionComponent implements OnInit, OnDestroy {
   timer: ReturnType<typeof setTimeout> | undefined;
   isButtonDisabled = false;
   currentuser!: string;
-  usersListList$!: Observable<GroupItem[]>;
+  myCompanions$!: Observable<MyCompanionsItem[]>;
 
   constructor(
     private store: Store<AppState>,
     private userApiServices: UserApiService,
     private snackBar: MatSnackBar,
     public dialog: MatDialog
-  ) {}
+  ) {
+    this.myCompanions$ = this.store.pipe(select(selectMyCompanions));
+  }
 
   ngOnInit() {
     this.startCountdown('userList');
@@ -94,6 +104,7 @@ export class UserSectionComponent implements OnInit, OnDestroy {
 
   updateList(identifier: string): void {
     this.fetchUserList();
+    this.fetchConversationsList();
     this.isButtonDisabled = true;
     localStorage.setItem(
       `lastClickTimestamp_${identifier}`,
@@ -129,29 +140,25 @@ export class UserSectionComponent implements OnInit, OnDestroy {
   fetchUserList() {
     this.userApiServices.getUsersList().subscribe(
       (response: HttpResponse<GetUserListResponse>) => {
-        // this.handleGroupListSuccess(response);
-        console.log(response);
-        //here we wiil     this.isButtonDisabled = false;
+        this.userApiServices.handleGetUsersSuccess(response);
       },
       (error) => {
         this.userApiServices.handleResponseError(error);
-        console.log('errore');
+        this.isButtonDisabled = false;
       }
     );
   }
 
-  private handleGroupListSuccess(
-    response: HttpResponse<GetGroupListResponse>
-  ): void {
-    if (response.status === 200 && response.body) {
-      this.snackBar.open('GroupListReceived', 'OK', {
-        duration: 5000,
-        panelClass: ['mat-accent'],
-        horizontalPosition: 'right',
-      });
-      console.log(response.body.Items);
-      this.store.dispatch(updateGroupsList({ groups: response.body.Items }));
-    }
+  fetchConversationsList() {
+    this.userApiServices.getConversationsList().subscribe(
+      (response: HttpResponse<GetConversationsListResponse>) => {
+        this.userApiServices.handleGetonversationsSuccess(response);
+      },
+      (error) => {
+        this.userApiServices.handleResponseError(error);
+        this.isButtonDisabled = false;
+      }
+    );
   }
 
   createNewGrope() {
